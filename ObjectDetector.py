@@ -31,7 +31,6 @@ class ObjectDetector:
         for box in boxes:
             x1, y1, x2, y2, conf, class_id = map(int, box)
             crops.append(image[y1:y2, x1:x2])
-        
         return crops
 
     def getCroppedDetectionsOfType(self, image, imgsz, classID):

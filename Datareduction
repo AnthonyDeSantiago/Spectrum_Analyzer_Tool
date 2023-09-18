@@ -1,0 +1,10 @@
+import csv
+
+class ImageDataProcessor:
+    def __init__(self, binary_image_data):
+        self.data = binary_image_data
+
+    def getTimestamp(self):
+        # Your code to extract and return the timestamp from binary_image_data
+        pass
+

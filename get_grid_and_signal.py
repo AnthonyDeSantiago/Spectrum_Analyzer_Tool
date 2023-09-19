@@ -2,7 +2,8 @@ import numpy as np
 import cv2
 import csv
 
-assetDirAdd = 'C:/Users/reave/PycharmProjects/SAT/assets/'
+# YOU'LL PROBABLY HAVE TO REPLACE THIS WITH THE ACTUAL PATH OF YOUR PROJECT'S ASSET FOLDER ON YOUR MACHINE FOR NOW
+assetDirAdd = 'Spectrum_Analyzer_Tool/assets/' 
 
 
 ######################################################################

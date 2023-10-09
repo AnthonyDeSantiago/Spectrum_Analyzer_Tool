@@ -71,9 +71,10 @@ def script_main(filePath, reference_level=0, center_frequency=1, span=100):
         #------------------------------------
         # Perform Signal Processing Stuff Here
         #------------------------------------
-        
+        frame_nmr = frame_nmr + 1
+
         if frame_nmr % process_frames_freq == 0 or not ret:
-            print('')
+            print('Image processing')
 
 
 
@@ -84,7 +85,7 @@ def script_main(filePath, reference_level=0, center_frequency=1, span=100):
         if cv2.waitKey(2) == ord('q'):
             break
 
-        frame_nmr = frame_nmr + 1
+        
 
 
 

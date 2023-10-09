@@ -72,7 +72,7 @@ def script_main(filePath, reference_level=0, center_frequency=1, span=100):
         # Perform Signal Processing Stuff Here
         #------------------------------------
         
-        if frame_nmr % process_frames_freq == 0:
+        if frame_nmr % process_frames_freq == 0 or not ret:
             print('')
 
 

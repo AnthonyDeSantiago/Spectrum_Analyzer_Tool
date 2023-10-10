@@ -62,6 +62,10 @@ def script_main(filePath, reference_level=0, center_frequency=1, span=100):
                     grid_crop = [x1, y1, x2, y2]
 
                 isolated_grid_crop = frame[grid_crop[1]: grid_crop[3], grid_crop[0]: grid_crop[2]]
+                #----------
+                # Do image cleaning and preprocessing here before storing into 'frames' list here:
+                
+                #----------
                 frames.append(isolated_grid_crop)
         
         # For Testing Purposes - Remove
@@ -69,12 +73,19 @@ def script_main(filePath, reference_level=0, center_frequency=1, span=100):
 
         
         #------------------------------------
-        # Perform Signal Processing Stuff Here
+        # Perform Signal Analysis Stuff Here
         #------------------------------------
         frame_nmr = frame_nmr + 1
 
         if frame_nmr % process_frames_freq == 0 or not ret:
-            print('Image processing')
+            print('Signal analysis starting')
+            #---------
+            # Do signal analysis here:
+
+            # Append results to the csv here:
+
+            #---------
+            frames = [] #<-----Clearing out 'frames' list to start adding fresh frames for the next 20 min segment
 
 
 

@@ -5,7 +5,14 @@ import cv2
 import numpy as np
 from ObjectDetector import ObjectDetector
 
-def script_main(filePath, reference_level=0, center_frequency=1, span=100):
+filePath = ''
+reference_level = 0.0
+span = 100.0
+center_frequency = 1.0
+
+# def script_main(filePath, reference_level=0, center_frequency=1, span=100):
+
+def script_main():
 
     # Load the models
     model_path_screen_finder = 'models/Optimized_Resized_cl_1.onnx'

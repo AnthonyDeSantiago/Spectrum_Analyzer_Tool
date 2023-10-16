@@ -91,7 +91,7 @@ class GetSignalWithCV2:
             frame_count += 1
 
         # WRITE BOUNDING BOX INFORMATION TO CSV
-        print("Printing contours to CSV")
+        print("Printing contours to CSV...")
 
         header = ['frame number', 'x1', 'y1', 'x2', 'y2', 'width', 'height']
 
@@ -102,7 +102,7 @@ class GetSignalWithCV2:
             for box in self.boxes:
                 writer.writerow(box)
         
-        print("\nget_signal run was successful\n")
+        print("\nComplete: get_signal run was successful\n")
 
 
 def agglomerative_cluster(contours, threshold_distance=30.0):

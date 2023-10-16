@@ -43,6 +43,8 @@ class Main(QMainWindow):
 
         self.label_2.repaint()
 
+        self.filePath = filePath
+
         return filePath
 
     def set_center(self):
@@ -85,7 +87,7 @@ class Main(QMainWindow):
             # self.label_8.repaint()
 
     def call_main(self):
-        main.script_main()
+        main.script_main(self.filePath)
 
         
 if __name__ == "__main__":

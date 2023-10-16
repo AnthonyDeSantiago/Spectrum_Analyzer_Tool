@@ -4,59 +4,67 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 from ObjectDetector import ObjectDetector
+from get_signal import GetSignalWithCV2
 
-filePath = ''
-reference_level = 0.0
-span = 100.0
-center_frequency = 1.0
-
-# def script_main(filePath, reference_level=0, center_frequency=1, span=100):
-
-def script_main():
-
+def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100):    
     # Load the models
     model_path_screen_finder = 'models/Optimized_Resized_cl_1.onnx'
     model_path_grid_finder = 'models/Grid_LowRes_1-4_224.onnx'
-    model_SpecScreen = YOLO(model_path_screen_finder, task='detect') #<---Model specifically for finding spectrum analyzer screen
+    model_SpecScreen = YOLO(model_path_screen_finder, task='detect') # <---Model specifically for finding spectrum analyzer screen
     model_Grid = YOLO(model_path_grid_finder, task='detect')
-
 
     # Load the video
     video_path = filePath
     video = cv2.VideoCapture(video_path)
 
+    ###################################################################################################
+    # SET UP VIDEO FOR ANALYSIS
+    ###################################################################################################
 
-    # Grabbing these just in case
-    width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    # Signal analysis modifiers -- impacts video processing
+    consecutive_frame_count = 5 # <-- should be able to evenly divide FPS with no remainder
+
+    # Variables
+    #width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+    #height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(video.get(cv2.CAP_PROP_FPS))
+    approx_frame_count = video.get(cv2.CAP_PROP_FRAME_COUNT)
 
+    # The frequency we want to perform actions
+    detect_gridCrop_freq = fps * 60 * 20 # <-- Arbitrarily choosing once every 20 mins for updating grid bounding box
+    append_gridCrop_freq = fps // consecutive_frame_count # <-- # frames per second to grab, # = consecutive_frame_count
+    process_frames_freq = fps * 60 * 20 # <-- Set it to once every 20 mins for now
 
+    # Setting up batch count for the whole video, including tail batch handling
+    frame_batch_total = 1
+
+    if approx_frame_count > process_frames_freq:    
+        frame_batch_total = int(approx_frame_count // process_frames_freq)
+        frame_batch_remainder = approx_frame_count % process_frames_freq
+
+        if frame_batch_remainder > (fps * 60 * 5): frame_batch_total += 1 # <-- If >5 mins will remain in final segm, add 1 to segm total
+        else: frame_batch_total = 1
+    
+        print("Number of frame batches: " + str(frame_batch_total))
+    
     # Instantiate object detectors here
     detector_grid = ObjectDetector(model=model_Grid, imgz=224)
+
+    frames = [] # <-- This will hold the frames 
+        
+    #--------------------------------------------------------------------------------------------------
+    # Isolate Grid
+    #--------------------------------------------------------------------------------------------------
+    
+    print("Grid isolation starting")
 
     # A frame count so we can perform actions every ith, jth, kth, etc frame
     frame_nmr = 0
 
-    # The frequency we want to perform actions
-    detect_gridCrop_freq = fps * 60 * 20 # <-- Arbitrarily choosing once every 20 mins for updating grid bounding box
-    append_gridCrop_freq = fps # <-- Gonna append to a list a frame once per second of video
-    process_frames_freq = fps * 60 * 20 # <-- Set it to once every 20 mins for now
-
-    
     grid_crop = []
     ret = True
-
-
-    frames = [] # <-- This will hold the frames 
-
+        
     while ret:
-        
-        
-        #------------------------------------
-        # Isolate Grid
-        #------------------------------------
-      
         if frame_nmr % append_gridCrop_freq == 0: #<-- Check if its time to append a new frame to frames list
 
             video.set(cv2.CAP_PROP_POS_FRAMES, frame_nmr)
@@ -69,44 +77,60 @@ def script_main():
                     grid_crop = [x1, y1, x2, y2]
 
                 isolated_grid_crop = frame[grid_crop[1]: grid_crop[3], grid_crop[0]: grid_crop[2]]
+
+                #------------------------------------------
+                # Image cleaning & pre-processing
+                 
+                gray = cv2.cvtColor(isolated_grid_crop, cv2.COLOR_BGR2GRAY)
                 #----------
-                # Do image cleaning and preprocessing here before storing into 'frames' list here:
-                
-                #----------
-                frames.append(isolated_grid_crop)
-        
-        # For Testing Purposes - Remove
-        cv2.imshow("Isolated grid crop", isolated_grid_crop)
+
+                frames.append(gray)
+
+        frame_nmr += 1
+
+
+    #--------------------------------------------------------------------------------------------------
+    # Get Static Background Image (as close to just the grid as possible)
+    #--------------------------------------------------------------------------------------------------
+    
+    # Setting up background processing
+    background_frames = []
+    background_sample_size = 500
+    background_frame_indices_raw = np.random.uniform(0, len(frames)-1, background_sample_size)
+    background_frame_indices = background_frame_indices_raw.astype(int)
+
+    # Get background frame array
+    for index in background_frame_indices:
+        background_frames.append(frames[index]) 
+    
+    # Calculate the median image
+    median_background_image = np.median(background_frames, axis=0).astype(np.uint8)
+    
+    #For testing purposes - can remove
+    #cv2.imshow("background median", median_background_image)
+    #cv2.waitKey(5000)
+
+    ###################################################################################################
+    # VIDEO ANALYSIS RUN
+    ###################################################################################################
+    
+    #Running through one batch at a time -- TBD, MAKE THIS FUNCTIONAL
+    #for i in range(0, frame_batch_total):
+        #----------------------------------------------------------------------------------------------
+        # Perform Signal Analysis 
+        #----------------------------------------------------------------------------------------------
+
+    print('Signal analysis starting')
 
         
-        #------------------------------------
-        # Perform Signal Analysis Stuff Here
-        #------------------------------------
-        frame_nmr = frame_nmr + 1
+    #run signal analysis (includes appending results to CSV)
+    signalSample = GetSignalWithCV2(frames, consecutive_frame_count, median_background_image)
+    signalSample.get_signal()
 
-        if frame_nmr % process_frames_freq == 0 or not ret:
-            print('Signal analysis starting')
-            #---------
-            # Do signal analysis here:
-
-            # Append results to the csv here:
-
-            #---------
-            frames = [] #<-----Clearing out 'frames' list to start adding fresh frames for the next 20 min segment
-
-
-
-
-
-
-        # For Testing Purposes - Remove
-        if cv2.waitKey(2) == ord('q'):
-            break
+    #---------
+    frames = [] #<-----Clearing out 'frames' list to start adding fresh frames for the next 20 min segment
 
         
-
-
-
     video.release()
     cv2.destroyAllWindows()
 

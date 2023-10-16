@@ -6,6 +6,8 @@ import numpy as np
 from ObjectDetector import ObjectDetector
 from get_signal import GetSignalWithCV2
 import time
+from decord import VideoReader
+from decord import cpu, gpu
 
 def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100):
     total_start = time.time()    
@@ -17,7 +19,7 @@ def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100
 
     # Load the video
     video_path = filePath
-    video = cv2.VideoCapture(video_path)
+    video = VideoReader(filePath, ctx=cpu(0))
 
     ###################################################################################################
     # SET UP VIDEO FOR ANALYSIS
@@ -27,10 +29,8 @@ def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100
     consecutive_frame_count = 5 # <-- should be able to evenly divide FPS with no remainder
 
     # Variables
-    #width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-    #height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = int(video.get(cv2.CAP_PROP_FPS))
-    approx_frame_count = video.get(cv2.CAP_PROP_FRAME_COUNT)
+    fps = int(video.get_avg_fps())
+    approx_frame_count = len(video)
 
     # The frequency we want to perform actions
     detect_gridCrop_freq = fps * 60 * 20 # <-- Arbitrarily choosing once every 20 mins for updating grid bounding box
@@ -53,28 +53,49 @@ def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100
     detector_grid = ObjectDetector(model=model_Grid, imgz=224)
 
     frames = [] # <-- This will hold the frames 
-        
+    
     #--------------------------------------------------------------------------------------------------
     # Isolate Grid
+    # USING DECORD
     #--------------------------------------------------------------------------------------------------
-    
-    print("\nGrid isolation starting -------------------------------------------\n")
+    print("\nGrid isolation using decord starting ------------------------------\n")
     start = time.time()
 
-    # A frame count so we can perform actions every ith, jth, kth, etc frame
-    frame_nmr = 0
+    start_f = 0
+    end_f = len(video)
+    every_f = append_gridCrop_freq
+
+    frames_list = list(range(start_f, end_f, every_f))
 
     grid_crop = []
-    ret = True
-        
-    while ret:
-        if frame_nmr % append_gridCrop_freq == 0: #<-- Check if its time to append a new frame to frames list
 
-            video.set(cv2.CAP_PROP_POS_FRAMES, frame_nmr)
-            ret, frame = video.read()
+    if every_f > 25 and len(frames_list) < 1000:  # this is faster for every > 25 frames and can fit in memory
+        frames = video.get_batch(frames_list).asnumpy()
 
-            if ret:
-                if frame_nmr % detect_gridCrop_freq == 0: #<-- Check if it's time to update the bounding boxes
+        for index, frame in zip(frames_list, frames):  # lets loop through the frames until the end
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+
+            if index % (detect_gridCrop_freq / append_gridCrop_freq) == 0: #<-- Check if it's time to update the bounding boxes
+                box = detector_grid.getBoundingBoxes(frame)[0]
+                x1, y1, x2, y2, conf, class_id = map(int, box)
+                grid_crop = [x1, y1, x2, y2]
+
+            isolated_grid_crop = frame[grid_crop[1]: grid_crop[3], grid_crop[0]: grid_crop[2]]
+
+            #------------------------------------------
+            # Image cleaning & pre-processing
+            gray = cv2.cvtColor(isolated_grid_crop, cv2.COLOR_BGR2GRAY)
+            #----------
+
+            frames.append(gray)
+
+    else:  # this is faster for every <25 and consumes small memory
+        for index in range(start_f, end_f):  # lets loop through the frames until the end
+            frame = video[index]  # read an image from the capture
+            frame = cv2.cvtColor(frame.asnumpy(), cv2.COLOR_RGB2BGR)
+
+            if index % every_f == 0:  # if this is a frame we want to write out based on the 'every' argument
+                if index % (detect_gridCrop_freq / append_gridCrop_freq) == 0: #<-- Check if it's time to update the bounding boxes
                     box = detector_grid.getBoundingBoxes(frame)[0]
                     x1, y1, x2, y2, conf, class_id = map(int, box)
                     grid_crop = [x1, y1, x2, y2]
@@ -88,11 +109,10 @@ def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100
 
                 frames.append(gray)
 
-        frame_nmr += 1
+    
 
     end = time.time()
-    print("\n>>> Grid isolation took " + str(end-start) + "s\n")
-    
+    print("\n>>> Grid isolation using decord took " + str(end-start) + "s\n")
 
     #--------------------------------------------------------------------------------------------------
     # Get Static Background Image (as close to just the grid as possible)
@@ -141,8 +161,7 @@ def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100
     #---------
     frames = [] #<-----Clearing out 'frames' list to start adding fresh frames for the next 20 min segment
 
-        
-    video.release()
+
     cv2.destroyAllWindows()
     total_end = time.time()
 

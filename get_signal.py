@@ -69,10 +69,11 @@ class GetSignalWithCV2:
                         (x, y, w, h) = cv2.boundingRect(contour)
                         # add boundingRect to lists of coords, along with the second of the video the rect is associated with
                         self.boxes.append([(frame_count + 1)/self.consecutive_frames, x, y, x + w, y + h, w, h])
+                                            
+                        ## For testing - show results:
                         # draw the bounding boxes
                         #cv2.rectangle(sum_frames, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                        
-                        ## For testing - show results:
+                        #
                         #cv2.imshow("sum frame", sum_frames)
                         #cv2.imshow("orig frame", orig_frame)
                         #cv2.waitKey(10)

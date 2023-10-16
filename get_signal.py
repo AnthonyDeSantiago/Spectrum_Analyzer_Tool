@@ -32,7 +32,7 @@ class GetSignalWithCV2:
                 orig_frame = frame
                 gray = orig_frame #cv2.cvtColor(orig_frame, cv2.COLOR_BGR2GRAY)
 
-                if frame_count % self.consecutive_frames == 0 or frame_count == 1:
+                if frame_count % self.consecutive_frames == 0 or frame_count == 0:
                     frame_diff_list = []
                 
                 frame_diff = cv2.absdiff(gray, background) # <-- find the difference between current and base
@@ -70,7 +70,7 @@ class GetSignalWithCV2:
                         # add boundingRect to lists of coords, along with the second of the video the rect is associated with
                         self.boxes.append([(frame_count + 1)/self.consecutive_frames, x, y, x + w, y + h, w, h])
                         # draw the bounding boxes
-                        cv2.rectangle(sum_frames, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                        #cv2.rectangle(sum_frames, (x, y), (x + w, y + h), (0, 255, 0), 2)
                         
                         ## For testing - show results:
                         #cv2.imshow("sum frame", sum_frames)

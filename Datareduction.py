@@ -8,7 +8,7 @@ class ImageDataProcessor:
     def getTimestamp(self):
         # Code to extract and return the timestamp from binary_image_data
         # Assuming you have a timestamp extraction method
-        timestamp = extract_timestamp(binary_image_data)  # Replace with your method
+        timestamp = extract_timestamp(self.data)  # Replace with your method
         return timestamp
 
     def getMinAmplitude(self):

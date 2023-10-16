@@ -83,7 +83,6 @@ def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100
 
                 #------------------------------------------
                 # Image cleaning & pre-processing
-                 
                 gray = cv2.cvtColor(isolated_grid_crop, cv2.COLOR_BGR2GRAY)
                 #----------
 

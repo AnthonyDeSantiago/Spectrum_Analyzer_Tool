@@ -49,11 +49,10 @@ class GetSignalWithCV2:
                     #TBD: EXPERIMENT WITH CHAIN TYPE FURTHER
                     contours, hierarchy = cv2.findContours(sum_frames, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)
  
-                    # For Testing - draw contours
-                    sum_frames = cv2.cvtColor(sum_frames, cv2.COLOR_GRAY2BGR)
-                    
-                    for i, cnt in enumerate(contours):
-                        cv2.drawContours(sum_frames, contours, i, (0, 0, 255), 3)                      
+                    ## For testing - draw contours:
+                    #sum_frames = cv2.cvtColor(sum_frames, cv2.COLOR_GRAY2BGR)
+                    #for i, cnt in enumerate(contours):
+                    #    cv2.drawContours(sum_frames, contours, i, (0, 0, 255), 3)                      
 
                     ##################################################################
                     # Contour Processing
@@ -73,9 +72,10 @@ class GetSignalWithCV2:
                         # draw the bounding boxes
                         cv2.rectangle(sum_frames, (x, y), (x + w, y + h), (0, 255, 0), 2)
                         
+                        ## For testing - show results:
                         #cv2.imshow("sum frame", sum_frames)
                         #cv2.imshow("orig frame", orig_frame)
-                        #cv2.waitKey(100)
+                        #cv2.waitKey(10)
                         
                         #for frame in frame_diff_list:
                         #    frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)

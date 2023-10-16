@@ -73,9 +73,9 @@ class GetSignalWithCV2:
                         # draw the bounding boxes
                         cv2.rectangle(sum_frames, (x, y), (x + w, y + h), (0, 255, 0), 2)
                         
-                        cv2.imshow("sum frame", sum_frames)
-                        cv2.imshow("orig frame", orig_frame)
-                        cv2.waitKey(100)
+                        #cv2.imshow("sum frame", sum_frames)
+                        #cv2.imshow("orig frame", orig_frame)
+                        #cv2.waitKey(100)
                         
                         #for frame in frame_diff_list:
                         #    frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)

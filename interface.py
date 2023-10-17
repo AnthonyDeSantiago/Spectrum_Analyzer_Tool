@@ -1,8 +1,8 @@
+
 import sys
 
 import main
-# from xml.etree.ElementTree import tostringlist
-from PyQt6.QtWidgets import QMainWindow, QApplication, QPushButton, QFileDialog, QLabel, QWidget, QInputDialog, QGraphicsWidget
+from PyQt6.QtWidgets import QMainWindow, QApplication, QFileDialog, QInputDialog
 from PyQt6.QtCore import pyqtSlot, Qt
 from PyQt6 import uic
 
@@ -22,6 +22,8 @@ class Main(QMainWindow):
         self.pushButton_4.clicked.connect(self.set_span)
 
         self.pushButton_5.clicked.connect(self.call_main)
+
+        self.pushButton_6.clicked.connect(self.set_IOP)
     
     @pyqtSlot()
     def open_dialog(self):
@@ -43,8 +45,6 @@ class Main(QMainWindow):
 
         self.label_2.repaint()
 
-        self.filePath = filePath
-
         return filePath
 
     def set_center(self):
@@ -54,11 +54,9 @@ class Main(QMainWindow):
 
         if ok:
             self.label_6.setText("Center: "+ str(d))
-            # self.label_6.repaint()
             main.center_frequency = d
         else:
             self.label_6.setText("No Center Selected!")
-            # self.label_6.repaint()
 
     def set_reference(self):
         d, ok = QInputDialog().getDouble(self, "Enter the Reference:",
@@ -67,11 +65,9 @@ class Main(QMainWindow):
 
         if ok:
             self.label_7.setText("Reference: "+ str(d))
-            # self.label_7.repaint()
             main.reference_level = d
         else:
             self.label_7.setText("No Reference Selected!")
-            self.label_7.repaint()
 
     def set_span(self):
         d, ok = QInputDialog().getDouble(self, "Enter the Span:",
@@ -80,14 +76,23 @@ class Main(QMainWindow):
 
         if ok:
             self.label_8.setText("Span: "+ str(d))
-            # self.label_8.repaint()
             main.span = d
         else:
             self.label_8.setText("No Span Selected!")
-            # self.label_8.repaint()
 
     def call_main(self):
-        main.script_main(self.filePath)
+        main.script_main()
+
+    def set_IOP(self):
+        d, ok = QInputDialog().getDouble(self, "Enter the Increment of Power:",
+                               "Amount:", 0.0, -10000, 10000, 4,
+                                Qt.WindowType.Dialog, 1)
+
+        if ok:
+            self.label_9.setText("Inc of Power: "+ str(d))
+            main.IOC = d
+        else:
+            self.label_9.setText("No Inc of Power Selected!")
 
         
 if __name__ == "__main__":

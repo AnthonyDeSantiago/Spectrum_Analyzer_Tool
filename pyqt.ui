@@ -72,12 +72,12 @@
     <rect>
      <x>10</x>
      <y>400</y>
-     <width>93</width>
+     <width>141</width>
      <height>28</height>
     </rect>
    </property>
    <property name="text">
-    <string>Set Center</string>
+    <string>Set Center Frequency</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_3">
@@ -85,12 +85,12 @@
     <rect>
      <x>190</x>
      <y>400</y>
-     <width>93</width>
+     <width>131</width>
      <height>28</height>
     </rect>
    </property>
    <property name="text">
-    <string>Set Reference</string>
+    <string>Set Reference Level</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_4">
@@ -168,12 +168,12 @@
     <rect>
      <x>530</x>
      <y>400</y>
-     <width>93</width>
+     <width>121</width>
      <height>28</height>
     </rect>
    </property>
    <property name="text">
-    <string>Inc of Power</string>
+    <string>Increment of Power</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_9">

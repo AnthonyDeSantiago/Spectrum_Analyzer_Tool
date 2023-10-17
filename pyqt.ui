@@ -70,8 +70,8 @@
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>410</y>
+     <x>10</x>
+     <y>400</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -83,8 +83,8 @@
   <widget class="QPushButton" name="pushButton_3">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>410</y>
+     <x>190</x>
+     <y>400</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -96,8 +96,8 @@
   <widget class="QPushButton" name="pushButton_4">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>410</y>
+     <x>360</x>
+     <y>400</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -109,9 +109,9 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>450</y>
-     <width>181</width>
+     <x>10</x>
+     <y>440</y>
+     <width>151</width>
      <height>16</height>
     </rect>
    </property>
@@ -122,9 +122,9 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>450</y>
-     <width>201</width>
+     <x>190</x>
+     <y>440</y>
+     <width>151</width>
      <height>16</height>
     </rect>
    </property>
@@ -135,9 +135,9 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>450</y>
-     <width>181</width>
+     <x>360</x>
+     <y>440</y>
+     <width>161</width>
      <height>16</height>
     </rect>
    </property>
@@ -161,6 +161,32 @@
    </property>
    <property name="text">
     <string>Go</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_6">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>400</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Inc of Power</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>440</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

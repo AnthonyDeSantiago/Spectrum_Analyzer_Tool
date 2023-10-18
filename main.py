@@ -6,12 +6,20 @@ import numpy as np
 from ObjectDetector import ObjectDetector
 from get_signal import GetSignalWithCV2
 import time
+# import interface
 
 filePath=''
 reference_level=0.0
 center_frequency=1.0
 span=100
 IOC = 0.0
+
+# def get_screen():
+#     video_path = filePath
+#     video = cv2.VideoCapture(video_path)
+#     interface.Main.thumbnail = video.read()
+
+#     return video.read()
 
 # def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100):
 
@@ -164,6 +172,4 @@ def script_main():
     print("\tApproximate video length >>> " + str(approx_video_seconds) + "s")
     print("\tTime cost per second of video >>> " + str(tps) + "s/s")
     print("\tVideo processed " + str((abs(total_time - approx_video_seconds)/approx_video_seconds)*100) + "% faster than real time\n")
-
-
 

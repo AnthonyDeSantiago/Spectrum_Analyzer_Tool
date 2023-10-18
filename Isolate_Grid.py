@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import pandas as pd
 import matplotlib.pyplot as plt
-# from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans
 
 
 video = cv2.VideoCapture('assets/Sample_Video.mp4')

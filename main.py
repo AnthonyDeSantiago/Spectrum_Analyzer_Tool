@@ -161,7 +161,7 @@ def script_main():
     start = time.time()
         
     #run signal analysis (includes appending results to CSV)
-    signalSample = GetSignalWithCV2(frames, consecutive_frame_count, median_background_image)
+    signalSample = GetSignalWithCV2(frames, consecutive_frame_count, median_background_image, reference_level=0.0, center_frequency=1.0, span=100)
     signalSample.get_signal()
 
     end = time.time()

@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import csv
+from clean_data import CleanData 
 
 # CAN UPDATE THIS IN THE FUTURE TO CHOOSE WHERE ON USERS MACHINE THE OUTPUT GOES
 assetDirAdd = 'assets/' 
@@ -10,11 +11,15 @@ assetDirAdd = 'assets/'
 #####################################################################
 
 class GetSignalWithCV2:
-    def __init__(self, frames, consecutive_frames=4, median_background_image=''):
+    def __init__(self, frames, consecutive_frames=4, median_background_image='',reference_level=0.0, center_frequency=1.0, span=100):
         self.frameset = frames
         self.consecutive_frames = int(consecutive_frames)
         self.median_bg = median_background_image
         self.boxes = []
+
+        self.reference_level = reference_level
+        self.center_frequency = center_frequency
+        self.span = span
     
     ### ISOLATE THE SIGNAL FROM THE SPECTRUM ANALYZER
     def get_signal(self):
@@ -91,19 +96,24 @@ class GetSignalWithCV2:
 
             frame_count += 1
 
+        height, width = self.frameset[1].shape
+
+        dataCleaner = CleanData(self.boxes, width, height, reference_level=0.0, center_frequency=1.0, span=100)
+        dataCleaner.get_results()
+
         # WRITE BOUNDING BOX INFORMATION TO CSV
-        print("Printing contours to CSV...")
-
-        header = ['frame number', 'x1', 'y1', 'x2', 'y2', 'width', 'height']
-
-        with open(assetDirAdd + 'out.csv', 'w', encoding='UTF8', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(header)
-
-            for box in self.boxes:
-                writer.writerow(box)
+        #print("Printing contours to CSV...")
+        #
+        #header = ['frame number', 'x1', 'y1', 'x2', 'y2', 'width', 'height']
+        #
+        #with open(assetDirAdd + 'out.csv', 'w', encoding='UTF8', newline='') as f:
+        #    writer = csv.writer(f)
+        #    writer.writerow(header)
+        #
+        #    for box in self.boxes:
+        #        writer.writerow(box)
         
-        print("\nComplete: get_signal run was successful\n")
+        print("\n\tComplete: get_signal run was successful\n")
 
 
 def agglomerative_cluster(contours, threshold_distance=30.0):

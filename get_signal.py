@@ -1,6 +1,9 @@
 import numpy as np
 import cv2
 import csv
+from image_processor import ImageProcessor
+import pytesseract
+
 from clean_data import CleanData 
 
 # CAN UPDATE THIS IN THE FUTURE TO CHOOSE WHERE ON USERS MACHINE THE OUTPUT GOES
@@ -30,6 +33,28 @@ class GetSignalWithCV2:
         background = background_raw #cv2.cvtColor(background_raw, cv2.COLOR_BGR2GRAY)
 
         frame_count = 0
+        
+                  # jalon
+
+         #  ImageProcessor instance
+        image_processor = ImageProcessor()
+
+        # Loop through frames or just take one frame to isolate the grid
+        # For simplicity, let's assume we're taking one frame
+        grid_frame = self.frameset[0]
+        grid = image_processor.isolateGrid(grid_frame)
+                 # jalon
+                 # Let's assume you have a method that does that called `extract_frequency_scale`
+        start_freq, end_freq = extract_frequency_scale(grid)
+        center_frequency = (start_freq + end_freq) / 2
+
+        dataCleaner = CleanData(self.boxes, width, height, 
+                                reference_level=self.reference_level, 
+                                center_frequency=center_frequency, 
+                                span=self.span)
+        dataCleaner.get_results()
+        #jalon
+        
 
         while frame_count < len(self.frameset):
             if self.frameset[frame_count:frame_count + self.consecutive_frames] != [ ]:
@@ -114,8 +139,42 @@ class GetSignalWithCV2:
         #        writer.writerow(box)
         
         print("\n\tComplete: get_signal run was successful\n")
+        
+#jalon
+def extract_frequency_scale(grid_image):
+    # Convert the image to gray scale
+    gray_image = cv2.cvtColor(grid_image, cv2.COLOR_BGR2GRAY)
 
+    # Applying thresholding technique
+    _, thresh_image = cv2.threshold(gray_image, 128, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
+    # Applying dilation on the threshold image
+    kernel = np.ones((2, 2), np.uint8)
+    img_dilation = cv2.dilate(thresh_image, kernel, iterations=1)
+
+    # Adding custom options
+    custom_config = r'--oem 3 --psm 6'
+    extracted_text = pytesseract.image_to_string(img_dilation, config=custom_config)
+
+    # Process the extracted text to find frequency values
+    # This will be unique to how your frequency values are represented in the image
+    # You might need to use regex or other string manipulation methods to parse the correct values
+    
+    # Dummy processing: let's assume the OCR text contains frequencies in the format "Start: XXXX MHz, End: XXXX MHz"
+    try:
+        start_freq_str = extracted_text.split('Start:')[1].split('MHz')[0].strip()
+        end_freq_str = extracted_text.split('End:')[1].split('MHz')[0].strip()
+        start_freq = float(start_freq_str)
+        end_freq = float(end_freq_str)
+    except (IndexError, ValueError):
+        # Handling the case where the parsing did not work as expected
+        print("Could not parse frequency values from OCR text.")
+        start_freq = None
+        end_freq = None
+
+    return start_freq, end_freq
+
+#jalon
 def agglomerative_cluster(contours, threshold_distance=30.0):
     current_contours = contours
     while len(current_contours) > 1:

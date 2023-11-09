@@ -45,15 +45,15 @@ class Main(QMainWindow):
 
 
         # Temp code for proof of images-------------------------------
-        scene = QGraphicsScene(0, 0, 400, 200)
+        # scene = QGraphicsScene(0, 0, 400, 200)
 
-        pixmap = QPixmap("8x9u9cS.jpg")
-        pixmapitem = scene.addPixmap(pixmap)
-        pixmapitem.setPos(10, 10)
+        # pixmap = QPixmap("8x9u9cS.jpg")
+        # pixmapitem = scene.addPixmap(pixmap)
+        # pixmapitem.setPos(10, 10)
 
-        self.graphicsView.setScene(scene)
-        self.graphicsView.setRenderHint(QPainter.RenderHint.Antialiasing)
-        self.graphicsView.show()
+        # self.graphicsView.setScene(scene)
+        # self.graphicsView.setRenderHint(QPainter.RenderHint.Antialiasing)
+        # self.graphicsView.show()
         # Temp code for proof of images-------------------------------
 
     @pyqtSlot()
@@ -80,37 +80,48 @@ class Main(QMainWindow):
         return filePath
 
     def set_center(self):
-        d, ok = QInputDialog().getDouble(self, "Enter the Center:",
-                               "Amount:", 0.0, -10000, 10000, 4,
+        d, ok = QInputDialog().getDouble(self, "Center:",
+                               "Center on screen:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
-            self.label_6.setText("Center: "+ str(d))
+            self.label_6.setText("Center: "+ str(d) + " GHz")
             main.center_frequency = d
         else:
             self.label_6.setText("No Center Selected!")
 
     def set_reference(self):
-        d, ok = QInputDialog().getDouble(self, "Enter the Reference:",
-                               "Amount:", 0.0, -10000, 10000, 4,
+        d, ok = QInputDialog().getDouble(self, "Reference:",
+                               "Reference Level on screen:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
-            self.label_7.setText("Reference: "+ str(d))
+            self.label_7.setText("Reference: "+ str(d) +" dBm")
             main.reference_level = d
         else:
             self.label_7.setText("No Reference Selected!")
 
     def set_span(self):
-        d, ok = QInputDialog().getDouble(self, "Enter the Span:",
-                               "Amount:", 0.0, -10000, 10000, 4,
+        d, ok = QInputDialog().getDouble(self, "Span:",
+                               "Span on screen:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
-            self.label_8.setText("Span: "+ str(d))
+            self.label_8.setText("Span: "+ str(d) +" MHz")
             main.span = d
         else:
             self.label_8.setText("No Span Selected!")
+
+    def set_IOP(self):
+        d, ok = QInputDialog().getDouble(self, "Increment of Power:",
+                               "Increment of Power on screen:", 0.0, -10000, 10000, 4,
+                                Qt.WindowType.Dialog, 1)
+
+        if ok:
+            self.label_9.setText("Inc of Power: "+ str(d) +" dB/")
+            main.IOC = d
+        else:
+            self.label_9.setText("No Inc of Power Selected!")
 
     def call_main(self):
         with redirect_stdout(str_out):  
@@ -222,19 +233,7 @@ class Main(QMainWindow):
         total_image_number = len(Main.image_array)
         self.label_5.setText("Image: "+ str(image_number) + " / " + str(total_image_number))
 
-    def set_IOP(self):
-        d, ok = QInputDialog().getDouble(self, "Enter the Increment of Power:",
-                               "Amount:", 0.0, -10000, 10000, 4,
-                                Qt.WindowType.Dialog, 1)
 
-        if ok:
-            self.label_9.setText("Inc of Power: "+ str(d))
-            main.IOC = d
-        else:
-            self.label_9.setText("No Inc of Power Selected!")
-
-    #def printToEventLog(msg):
-        #self.eventLog.appendPlainText(msg)
 
 
 

@@ -13,9 +13,9 @@ str_out = io.StringIO()
 
 class Main(QMainWindow):
 
-    img_array1 = ["Capture 1,C:\Spectrum\images\Capture1.jpg"]
-    img_array2 = ["Capture 2,C:\Spectrum\images\Capture2.jpg"]
-    img_array3 = ["Capture 3,C:\Spectrum\images\Capture3.jpg"]
+    img_array1 = ["Capture 1,images\Capture1.jpg"]
+    img_array2 = ["Capture 2,images\Capture2.jpg"]
+    img_array3 = ["Capture 3,images\Capture3.jpg"]
     image_array = [img_array1,img_array2,img_array3]
 
     image_index = 0
@@ -27,21 +27,20 @@ class Main(QMainWindow):
 
         self.pushButton.clicked.connect(self.open_dialog)
 
-        self.pushButton_2.clicked.connect(self.set_center)
+        self.centerButton.clicked.connect(self.set_center)
+        self.referenceButton.clicked.connect(self.set_reference)
+        self.spanButton.clicked.connect(self.set_span)
+        self.minPowerButton.clicked.connect(self.set_min_power)
+        self.maxPowerButton.clicked.connect(self.set_max_power)
 
-        self.pushButton_3.clicked.connect(self.set_reference)
-
-        self.pushButton_4.clicked.connect(self.set_span)
-
-        self.pushButton_5.clicked.connect(self.call_main)
-
-        self.pushButton_6.clicked.connect(self.set_IOP)
+        self.script1Button.clicked.connect(self.call_main)
 
         self.imgGotoFirst.clicked.connect(self.set_image_first)
         self.imgGotoPrevious.clicked.connect(self.set_image_previous)
         self.imgGotoNext.clicked.connect(self.set_image_next)
         self.imgGotoLast.clicked.connect(self.set_image_last)
 
+        self.resetLog.clicked.connect(self.reset_log)
 
 
         # Temp code for proof of images-------------------------------
@@ -66,22 +65,20 @@ class Main(QMainWindow):
         )
         print(fname)
 
-
         # Make path into a variable
         filePath = fname[0]
         main.filePath = fname[0]  
 
-        output = ("Please select Values for Video: " + filePath)
-
+        output = ("Please select the values for the video selected using the sample image below")
         self.label_2.setText(output)
 
-        self.label_2.repaint()
+        self.eventLog.appendPlainText("Video Selected: " + filePath)
 
         return filePath
 
     def set_center(self):
-        d, ok = QInputDialog().getDouble(self, "Center:",
-                               "Center on screen:", 0.0, -10000, 10000, 4,
+        d, ok = QInputDialog().getDouble(self, "Center Frequency",
+                               "Center Frequency in video:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
@@ -91,8 +88,8 @@ class Main(QMainWindow):
             self.label_6.setText("No Center Selected!")
 
     def set_reference(self):
-        d, ok = QInputDialog().getDouble(self, "Reference:",
-                               "Reference Level on screen:", 0.0, -10000, 10000, 4,
+        d, ok = QInputDialog().getDouble(self, "Reference Level",
+                               "Reference Level in video:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
@@ -102,8 +99,8 @@ class Main(QMainWindow):
             self.label_7.setText("No Reference Selected!")
 
     def set_span(self):
-        d, ok = QInputDialog().getDouble(self, "Span:",
-                               "Span on screen:", 0.0, -10000, 10000, 4,
+        d, ok = QInputDialog().getDouble(self, "Span",
+                               "Span in video:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
@@ -112,20 +109,34 @@ class Main(QMainWindow):
         else:
             self.label_8.setText("No Span Selected!")
 
-    def set_IOP(self):
-        d, ok = QInputDialog().getDouble(self, "Increment of Power:",
-                               "Increment of Power on screen:", 0.0, -10000, 10000, 4,
+    def set_min_power(self):
+        d, ok = QInputDialog().getDouble(self, "Minimum Power",
+                               "Minimum Power in video:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
-            self.label_9.setText("Inc of Power: "+ str(d) +" dB/")
-            main.IOC = d
+            self.label_9.setText("Minimum Power: "+ str(d) +" dB/")
+            main.min_power = d
         else:
-            self.label_9.setText("No Inc of Power Selected!")
+            self.label_9.setText("No Minimum Power Selected!")
+
+    def set_max_power(self):
+            d, ok = QInputDialog().getDouble(self, "Maximum Power",
+                                "Maximum Power in video:", 0.0, -10000, 10000, 4,
+                                    Qt.WindowType.Dialog, 1)
+
+            if ok:
+                self.maxPowerOutput.setText("Maximum Power: "+ str(d) +" dB/")
+                main.max_power = d
+            else:
+                self.maxPowerOutput.setText("No Maximum Power Selected!")
 
     def call_main(self):
+        self.scriptStatus.setText("Processing Video...")
         with redirect_stdout(str_out):  
             main.script_main()
+
+        self.scriptStatus.setText("Video Processed! CSV file has been added to directory")
 
         out = str_out.getvalue()
         self.eventLog.appendPlainText(out)
@@ -138,9 +149,9 @@ class Main(QMainWindow):
         image_prop = Main.image_array[Main.image_index]
         self.imgTitle.setText(image_prop[0].split(',')[0])
         image_path = image_prop[0].split(',')[1]
-        pixmap = QPixmap(image_path)
+        # pixmap = QPixmap(image_path)
         # pixmap.scaled(s[, aspectMode=Qt.IgnoreAspectRatio[, mode=Qt.FastTransformation]])
-        pixmapitem = scene.addPixmap(pixmap)
+        # pixmapitem = scene.addPixmap(pixmap)
         #pixmapitem.setPos(0, 0)
 
         self.graphicsView.setScene(scene)
@@ -154,7 +165,7 @@ class Main(QMainWindow):
 
 
     def set_image_first(self):
-        self.eventLog.appendPlainText('Clicked on First Button')
+        # self.eventLog.appendPlainText('Clicked on First Button')
         scene = QGraphicsScene(0, 0, 0, 0)
 
         Main.image_index = 0 
@@ -176,7 +187,7 @@ class Main(QMainWindow):
             
 
     def set_image_previous(self):
-        self.eventLog.appendPlainText('Clicked on Previous Button')
+        # self.eventLog.appendPlainText('Clicked on Previous Button')
         scene = QGraphicsScene(0, 0, 0, 0)
 
         Main.image_index = Main.image_index - 1 
@@ -195,7 +206,7 @@ class Main(QMainWindow):
         self.label_5.setText("Image: "+ str(image_number) + " / " + str(total_image_number))
 
     def set_image_next(self):
-        self.eventLog.appendPlainText('Clicked on Next Button')
+        # self.eventLog.appendPlainText('Clicked on Next Button')
         scene = QGraphicsScene(0, 0, 0, 0)
 
         Main.image_index = Main.image_index + 1
@@ -215,7 +226,7 @@ class Main(QMainWindow):
         self.label_5.setText("Image: "+ str(image_number) + " / " + str(total_image_number))
 
     def set_image_last(self):
-        self.eventLog.appendPlainText('Clicked on Last Button')
+        # self.eventLog.appendPlainText('Clicked on Last Button')
         scene = QGraphicsScene(0, 0, 0, 0)
 
         image_index = len(Main.image_array) - 1
@@ -233,8 +244,8 @@ class Main(QMainWindow):
         total_image_number = len(Main.image_array)
         self.label_5.setText("Image: "+ str(image_number) + " / " + str(total_image_number))
 
-
-
+    def reset_log(self):
+        self.eventLog.clear()
 
 
 

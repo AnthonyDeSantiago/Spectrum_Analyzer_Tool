@@ -11,10 +11,11 @@ from decord import VideoReader
 from decord import cpu, gpu
 
 filePath=''
-reference_level=0.0
 center_frequency=1.0
+reference_level=0.0
 span=100
-IOC = 0.0
+max_power = 0.0
+min_power = 0.0
 
 # def get_screen():
 #     video_path = filePath

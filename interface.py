@@ -21,7 +21,16 @@ from ObjectDetector import ObjectDetector
 
 str_out = io.StringIO()
 
+
+center_frequency=1.0
+reference_level=0.0
+span=100
+max_power = 0.0
+min_power = 0.0
+
 class Main(QMainWindow):
+
+    filePath=''
 
     img_array1 = ["Capture 1,images\Capture1.jpg"]
     img_array2 = ["Capture 2,images\Capture2.jpg"]
@@ -65,7 +74,8 @@ class Main(QMainWindow):
 
         # Make path into a variable
         filePath = fname[0]
-        main.filePath = fname[0]  
+        self.filePath = fname[0]
+        main.filePath = fname[0]
 
         output = ("Please select the values for the video selected using the sample image below")
         self.label_2.setText(output)
@@ -145,7 +155,8 @@ class Main(QMainWindow):
 
         with redirect_stdout(str_out):
             # QApplication.setOverrideCursor(pyqtSlot.WaitCursor)
-            main.script_trained_ml_approach()
+            print(self.filePath)
+            self.script_trained_ml_approach(self.filePath)
             # QApplication.restoreOverrideCursor()
 
         out = str_out.getvalue()
@@ -347,7 +358,7 @@ class Main(QMainWindow):
     def reset_log(self):
         self.eventLog.clear()
 
-    def script_trained_ml_approach():
+    def script_trained_ml_approach(self, videopath):
         print("Script_main adjusted called")
         # Load the models
         model_g_s = 'models/192_300Epochs_AllVideos.onnx'
@@ -356,8 +367,8 @@ class Main(QMainWindow):
 
 
         # Load the video
-        video_path = filePath
-        video = cv2.VideoCapture(video_path)
+        # video_path = filePath
+        video = cv2.VideoCapture(videopath)
 
 
         # Grabbing these just in case
@@ -373,7 +384,7 @@ class Main(QMainWindow):
         frame_nmr = 0
 
         # The frequency we want to perform actions
-        read_freq = fps# <-- Gonna append to a list a frame once per second of video
+        read_freq = 30# <-- Gonna append to a list a frame once per second of video
 
         ret = True
 
@@ -406,10 +417,10 @@ class Main(QMainWindow):
                         if frame_nmr % read_freq == 0:
                             num_classes, x1, y1, x2, y2, conf, class_id, s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = process_frame(frame, detector_grid)
                             timestamp, estimated_center_frequency, estimated_power = get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, lb_freq, ub_freq, lb_power, ub_power)
-                            if show and num_classes == 2:
-                                draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
-                                if cv2.waitKey(2) == ord('q'):
-                                    break
+                            # if show and num_classes == 2:
+                            #     draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
+                                # if cv2.waitKey(2) == ord('q'):
+                                #     break
                             if num_classes >= 2:
                                 
                                 # Write the data to the CSV file
@@ -452,73 +463,73 @@ class Main(QMainWindow):
                     horizontal_line_text = horizontal_line_text + "{:.{}f}".format(estimated_power, 2) + " dB"
 
 
-    def process_frame(frame, detector):
-        boxes = detector.getBoundingBoxes(frame)
-        
-        num_classes = 0
-        x1, y1, x2, y2, conf, class_id = 0, 0, 0, 0, 0, 0 
-        s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = 0, 0, 0, 0, 0, 0 
+def process_frame(frame, detector):
+    boxes = detector.getBoundingBoxes(frame)
+    
+    num_classes = 0
+    x1, y1, x2, y2, conf, class_id = 0, 0, 0, 0, 0, 0 
+    s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = 0, 0, 0, 0, 0, 0 
 
-        if len(boxes) > 0:
-            box = boxes[0]
-            x1, y1, x2, y2, conf, class_id = map(int, box)
-            num_classes = 1
+    if len(boxes) > 0:
+        box = boxes[0]
+        x1, y1, x2, y2, conf, class_id = map(int, box)
+        num_classes = 1
 
-        if len(boxes) > 1:
-            box = boxes[1]
-            s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = map(int, box)
-            num_classes = 2
+    if len(boxes) > 1:
+        box = boxes[1]
+        s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = map(int, box)
+        num_classes = 2
 
-        return num_classes, x1, y1, x2, y2, conf, class_id, s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id
-
-
-    def get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, lb_freq, ub_freq, lb_power, ub_power):
-        grid_size_x = x2 - x1
-        grid_size_y = y2 - y1
-        range_freq = ub_freq - lb_freq
-        range_power = ub_power - lb_power
-
-        midpoint = s_x2 - (s_x2 - s_x1) // 2
-
-        timestamp = frame_nmr / fps
-        estimated_center_frequency = ((midpoint - x1) / grid_size_x) * range_freq + lb_freq
-        estimated_power = ((s_y1 - y1) / grid_size_y) * range_power + lb_power
-
-        return timestamp, estimated_center_frequency, estimated_power
+    return num_classes, x1, y1, x2, y2, conf, class_id, s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id
 
 
-    def draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power):
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        text_color = (100, 255, 100)
-        font_scale = 1
-        font_thickness = 2
+def get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, lb_freq, ub_freq, lb_power, ub_power):
+    grid_size_x = x2 - x1
+    grid_size_y = y2 - y1
+    range_freq = ub_freq - lb_freq
+    range_power = ub_power - lb_power
 
-        horizontal_line_text = "Power: "
-        vertical_line_text = "Center Freq: "
+    midpoint = s_x2 - (s_x2 - s_x1) // 2
 
-        vertical_line_text = vertical_line_text + str(estimated_center_frequency) + " GHz"
-        horizontal_line_text = horizontal_line_text + "{:.{}f}".format(estimated_power, 2) + " dB"
+    timestamp = frame_nmr / fps
+    estimated_center_frequency = ((midpoint - x1) / grid_size_x) * range_freq + lb_freq
+    estimated_power = ((s_y1 - y1) / grid_size_y) * range_power + lb_power
 
-        midpoint = s_x2 - (s_x2 - s_x1) // 2
-        frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        frame = cv2.rectangle(frame, (s_x1, s_y1), (s_x2, s_y2), (0, 255, 0), 2)
-        cv2.line(frame, (x1, s_y1), (x2, s_y1), (0, 0, 255), 2)
-        cv2.line(frame, (midpoint, y1), (midpoint, y2), (0, 0, 255), 2)
-        cv2.putText(frame, horizontal_line_text, (x1 + 500, s_y1 - 10), font, font_scale, text_color, font_thickness)
-        cv2.putText(frame, vertical_line_text, (midpoint + 10, 900), font, font_scale, text_color, font_thickness)
-        cv2.imshow("Visualizer", frame)
-
-        return frame
+    return timestamp, estimated_center_frequency, estimated_power
 
 
-    def get_cpu_info():
-        num_cores = os.cpu_count()
+def draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    text_color = (100, 255, 100)
+    font_scale = 1
+    font_thickness = 2
 
-        num_available_cores = multiprocessing.cpu_count()
-        print(f"Number of CPU cores: {num_cores}")
-        print(f"Number of available CPU cores: {num_available_cores}")
+    horizontal_line_text = "Power: "
+    vertical_line_text = "Center Freq: "
 
-        return num_cores, num_available_cores
+    vertical_line_text = vertical_line_text + str(estimated_center_frequency) + " GHz"
+    horizontal_line_text = horizontal_line_text + "{:.{}f}".format(estimated_power, 2) + " dB"
+
+    midpoint = s_x2 - (s_x2 - s_x1) // 2
+    frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    frame = cv2.rectangle(frame, (s_x1, s_y1), (s_x2, s_y2), (0, 255, 0), 2)
+    cv2.line(frame, (x1, s_y1), (x2, s_y1), (0, 0, 255), 2)
+    cv2.line(frame, (midpoint, y1), (midpoint, y2), (0, 0, 255), 2)
+    cv2.putText(frame, horizontal_line_text, (x1 + 500, s_y1 - 10), font, font_scale, text_color, font_thickness)
+    cv2.putText(frame, vertical_line_text, (midpoint + 10, 900), font, font_scale, text_color, font_thickness)
+    cv2.imshow("Visualizer", frame)
+
+    return frame
+
+
+def get_cpu_info():
+    num_cores = os.cpu_count()
+
+    num_available_cores = multiprocessing.cpu_count()
+    print(f"Number of CPU cores: {num_cores}")
+    print(f"Number of available CPU cores: {num_available_cores}")
+
+    return num_cores, num_available_cores
 
 
 

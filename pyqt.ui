@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1380</width>
+    <width>1371</width>
     <height>947</height>
    </rect>
   </property>
@@ -57,7 +57,7 @@
     <rect>
      <x>20</x>
      <y>104</y>
-     <width>1011</width>
+     <width>971</width>
      <height>31</height>
     </rect>
    </property>
@@ -82,7 +82,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>20</x>
      <y>140</y>
      <width>141</width>
      <height>28</height>
@@ -98,7 +98,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>210</x>
      <y>140</y>
      <width>131</width>
      <height>28</height>
@@ -114,7 +114,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>460</x>
+     <x>390</x>
      <y>140</y>
      <width>131</width>
      <height>28</height>
@@ -127,7 +127,7 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>20</x>
      <y>180</y>
      <width>141</width>
      <height>16</height>
@@ -143,7 +143,7 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>210</x>
      <y>180</y>
      <width>131</width>
      <height>16</height>
@@ -159,7 +159,7 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>460</x>
+     <x>390</x>
      <y>180</y>
      <width>131</width>
      <height>20</height>
@@ -199,7 +199,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>650</x>
+     <x>570</x>
      <y>140</y>
      <width>131</width>
      <height>28</height>
@@ -212,7 +212,7 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>650</x>
+     <x>570</x>
      <y>180</y>
      <width>131</width>
      <height>20</height>
@@ -407,7 +407,7 @@
   <widget class="QLabel" name="maxPowerOutput">
    <property name="geometry">
     <rect>
-     <x>840</x>
+     <x>750</x>
      <y>180</y>
      <width>131</width>
      <height>20</height>
@@ -426,7 +426,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>840</x>
+     <x>750</x>
      <y>140</y>
      <width>131</width>
      <height>28</height>
@@ -523,6 +523,19 @@
    </property>
    <property name="text">
     <string>Model 2</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>220</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Display</string>
    </property>
   </widget>
  </widget>

@@ -9,6 +9,7 @@ from PyQt6.QtWidgets import QMainWindow, QApplication, QFileDialog, QInputDialog
 from PyQt6.QtCore import pyqtSlot, Qt
 from PyQt6.QtGui import QPixmap, QPainter, QImage
 from PyQt6 import uic
+from datetime import datetime
 
 import os
 import multiprocessing
@@ -67,6 +68,7 @@ class Main(QMainWindow):
         self.imgGotoLast.clicked.connect(self.set_image_last)
 
         self.resetLog.clicked.connect(self.reset_log)
+        self.downloadLog.clicked.connect(self.download_log)
 
     @pyqtSlot()
     def open_dialog(self):
@@ -114,7 +116,7 @@ class Main(QMainWindow):
 
     def set_center(self):
         d, ok = QInputDialog().getDouble(self, "Center Frequency",
-                               "Center Frequency in video:", 0.0, -10000, 10000, 4,
+                               "Center Frequency in GHz:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
@@ -126,7 +128,7 @@ class Main(QMainWindow):
 
     def set_reference(self):
         d, ok = QInputDialog().getDouble(self, "Reference Level",
-                               "Reference Level in video:", 0.0, -10000, 10000, 4,
+                               "Reference Level in dBm:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
@@ -138,11 +140,11 @@ class Main(QMainWindow):
 
     def set_span(self):
         d, ok = QInputDialog().getDouble(self, "Span",
-                               "Span in video:", 0.0, -10000, 10000, 4,
+                               "Span in GHz:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
-            self.label_8.setText("Span: "+ str(d) +" MHz")
+            self.label_8.setText("Span: "+ str(d) +" GHz")
             main.span = d
             self.eventLog.appendPlainText("Span Entered: " + str(d))
         else:
@@ -150,11 +152,11 @@ class Main(QMainWindow):
 
     def set_min_power(self):
         d, ok = QInputDialog().getDouble(self, "Minimum Power",
-                               "Minimum Power in video:", 0.0, -10000, 10000, 4,
+                               "Minimum Power in dB:", 0.0, -10000, 10000, 4,
                                 Qt.WindowType.Dialog, 1)
 
         if ok:
-            self.label_9.setText("Minimum Power: "+ str(d) +" dB/")
+            self.label_9.setText("Minimum Power: "+ str(d) +" dB")
             main.min_power = d
             self.eventLog.appendPlainText("Minimum Power Entered: " + str(d))
         else:
@@ -162,25 +164,26 @@ class Main(QMainWindow):
 
     def set_max_power(self):
             d, ok = QInputDialog().getDouble(self, "Maximum Power",
-                                "Maximum Power in video:", 0.0, -10000, 10000, 4,
+                                "Maximum Power in dB:", 0.0, -10000, 10000, 4,
                                     Qt.WindowType.Dialog, 1)
 
             if ok:
-                self.maxPowerOutput.setText("Maximum Power: "+ str(d) +" dB/")
+                self.maxPowerOutput.setText("Maximum Power: "+ str(d) +" dB")
                 main.max_power = d
                 self.eventLog.appendPlainText("Maximum Power Entered: " + str(d))
             else:
                 self.maxPowerOutput.setText("No Maximum Power Selected!")
 
     def call_model1(self):
-
         self.scriptStatus.setText("Processing Video...")
         self.repaint()
+
+        check_for_check = self.displayCheckBox.isChecked()
 
         with redirect_stdout(str_out):
             # QApplication.setOverrideCursor(pyqtSlot.WaitCursor)
             print(self.filePath)
-            self.script_trained_ml_approach(self.filePath)
+            self.script_trained_ml_approach(self.filePath, check_for_check)
             # QApplication.restoreOverrideCursor()
 
         out = str_out.getvalue()
@@ -368,10 +371,20 @@ class Main(QMainWindow):
     def reset_log(self):
         self.eventLog.clear()
 
+    def download_log(self):
+        time = datetime.now()
+        text_file = open("log-"+str(time.month)+"-"+str(time.day)+"-"+str(time.year)+"-"+str(time.hour)+"-"+str(time.minute)+".txt", "w")
+
+        # Take content
+        content = self.eventLog.toPlainText()
+
+        # Write content to file
+        n = text_file.write(content)
+
 ###################################################################
 # Script_Trained_ML_Approach
 ###################################################################
-    def script_trained_ml_approach(self, videopath):
+    def script_trained_ml_approach(self, videopath, check_for_check):
         print("script_trained_ml_approach called")
         
 
@@ -435,14 +448,15 @@ class Main(QMainWindow):
                         if frame_nmr % read_freq == 0:
                             num_classes, x1, y1, x2, y2, conf, class_id, s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = process_frame(frame, detector_grid)
                             timestamp, estimated_center_frequency, estimated_power = get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, lb_freq, ub_freq, lb_power, ub_power)
-                            if num_classes >= 2:
-                                if show:
-                                    draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
-                                    if cv2.waitKey(2) == ord('q'):
-                                        break
-                                incomming_powers.append(estimated_power)
-                                # Write the data to the CSV file
-                                writer.writerow({'Timestamp': timestamp, 'Frequency (GHz)': estimated_center_frequency, 'Power (dBm)': estimated_power, 'Min Power (dBm)': 0, 'Max Power (dBm)': 0, 'Avg Power (dBm)': 0})
+                            if check_for_check == True:
+                                if num_classes >= 2:
+                                    if show:
+                                        draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
+                                        if cv2.waitKey(2) == ord('q'):
+                                            break
+                                    incomming_powers.append(estimated_power)
+                                    # Write the data to the CSV file
+                                    writer.writerow({'Timestamp': timestamp, 'Frequency (GHz)': estimated_center_frequency, 'Power (dBm)': estimated_power, 'Min Power (dBm)': 0, 'Max Power (dBm)': 0, 'Avg Power (dBm)': 0})
                             else:
                                 if len(incomming_powers) > 0:
                                     minumum_power = min(incomming_powers)

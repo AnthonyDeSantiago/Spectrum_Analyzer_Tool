@@ -16,7 +16,7 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>375</x>
+     <x>355</x>
      <y>60</y>
      <width>301</width>
      <height>41</height>
@@ -34,7 +34,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>180</x>
      <y>0</y>
      <width>651</width>
      <height>61</height>
@@ -82,7 +82,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>50</x>
      <y>140</y>
      <width>141</width>
      <height>28</height>
@@ -98,7 +98,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>250</x>
      <y>140</y>
      <width>131</width>
      <height>28</height>
@@ -114,7 +114,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>390</x>
+     <x>440</x>
      <y>140</y>
      <width>131</width>
      <height>28</height>
@@ -127,8 +127,8 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>180</y>
+     <x>50</x>
+     <y>175</y>
      <width>141</width>
      <height>16</height>
     </rect>
@@ -143,8 +143,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>180</y>
+     <x>250</x>
+     <y>175</y>
      <width>131</width>
      <height>16</height>
     </rect>
@@ -159,8 +159,8 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>180</y>
+     <x>440</x>
+     <y>175</y>
      <width>131</width>
      <height>20</height>
     </rect>
@@ -178,7 +178,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>290</x>
      <y>209</y>
      <width>211</width>
      <height>41</height>
@@ -199,7 +199,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>570</x>
+     <x>630</x>
      <y>140</y>
      <width>131</width>
      <height>28</height>
@@ -212,8 +212,8 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>180</y>
+     <x>630</x>
+     <y>175</y>
      <width>131</width>
      <height>20</height>
     </rect>
@@ -407,8 +407,8 @@
   <widget class="QLabel" name="maxPowerOutput">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>180</y>
+     <x>820</x>
+     <y>175</y>
      <width>131</width>
      <height>20</height>
     </rect>
@@ -426,7 +426,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>750</x>
+     <x>820</x>
      <y>140</y>
      <width>131</width>
      <height>28</height>
@@ -465,7 +465,7 @@
   <widget class="QLabel" name="scriptStatus">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>190</x>
      <y>249</y>
      <width>631</width>
      <height>51</height>
@@ -483,34 +483,13 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_8">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>690</x>
-     <y>209</y>
-     <width>111</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>14</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Reset</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="script2Button">
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
-     <x>470</x>
+     <x>510</x>
      <y>209</y>
      <width>211</width>
      <height>41</height>
@@ -525,17 +504,17 @@
     <string>Model 2</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox">
+  <widget class="QCheckBox" name="displayCheckBox">
    <property name="geometry">
     <rect>
-     <x>820</x>
+     <x>740</x>
      <y>220</y>
-     <width>81</width>
+     <width>121</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Display</string>
+    <string>Display Process</string>
    </property>
   </widget>
  </widget>

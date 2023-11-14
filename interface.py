@@ -359,9 +359,9 @@ class Main(QMainWindow):
         self.eventLog.clear()
 
     def script_trained_ml_approach(self, videopath):
-        print("Script_main adjusted called")
+        print("script_trained_ml_approach called")
         # Load the models
-        model_g_s = 'models/192_300Epochs_AllVideos.onnx'
+        model_g_s = 'models/192_200Epochs_AllVideos.onnx'
         # model_g_s = 'CreateDataSet/runs/detect/train12/weights/best.onnx'
         model_Grid = YOLO(model_g_s, task='detect')
 

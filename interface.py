@@ -358,8 +358,14 @@ class Main(QMainWindow):
     def reset_log(self):
         self.eventLog.clear()
 
+###################################################################
+# Script_Trained_ML_Approach
+###################################################################
     def script_trained_ml_approach(self, videopath):
         print("script_trained_ml_approach called")
+        
+
+
         # Load the models
         model_g_s = 'models/192_200Epochs_AllVideos.onnx'
         # model_g_s = 'CreateDataSet/runs/detect/train12/weights/best.onnx'
@@ -384,7 +390,7 @@ class Main(QMainWindow):
         frame_nmr = 0
 
         # The frequency we want to perform actions
-        read_freq = 30# <-- Gonna append to a list a frame once per second of video
+        read_freq = fps# <-- Gonna append to a list a frame once per second of video
 
         ret = True
 
@@ -395,6 +401,8 @@ class Main(QMainWindow):
 
         lb_power = 0
         ub_power = 100
+
+        incomming_powers = []
 
         start_time = time.time()
         with open('output.csv', 'w', newline='') as csvfile:
@@ -422,11 +430,18 @@ class Main(QMainWindow):
                                 if cv2.waitKey(2) == ord('q'):
                                     break
                             if num_classes >= 2:
-                                
+                                incomming_powers.append(estimated_power)
                                 # Write the data to the CSV file
                                 writer.writerow({'Timestamp': timestamp, 'Frequency (GHz)': estimated_center_frequency, 'Power (dBm)': estimated_power, 'Min Power (dBm)': 0, 'Max Power (dBm)': 0, 'Avg Power (dBm)': 0})
                             else:
-                                writer.writerow({'Timestamp': timestamp, 'Frequency (GHz)': 0, 'Power (dBm)': 0, 'Min Power (dBm)': 0, 'Max Power (dBm)': 0, 'Avg Power (dBm)': 0})
+                                if len(incomming_powers) > 0:
+                                    minumum_power = min(incomming_powers)
+                                    max_power = max(incomming_powers)
+                                    average_power = sum(incomming_powers) / len(incomming_powers)
+                                    writer.writerow({'Timestamp': timestamp, 'Frequency (GHz)': 0, 'Power (dBm)': 0, 'Min Power (dBm)': minumum_power, 'Max Power (dBm)': max_power, 'Avg Power (dBm)': average_power})
+                                    incomming_powers = []
+                                else:
+                                     writer.writerow({'Timestamp': timestamp, 'Frequency (GHz)': 0, 'Power (dBm)': 0, 'Min Power (dBm)': 0, 'Max Power (dBm)': 0, 'Avg Power (dBm)': 0})
 
                 frame_nmr = frame_nmr + 1
 
@@ -530,6 +545,9 @@ def get_cpu_info():
     print(f"Number of available CPU cores: {num_available_cores}")
 
     return num_cores, num_available_cores
+
+###################################################################
+###################################################################
 
 
 

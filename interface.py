@@ -5,9 +5,9 @@ import io
 import asyncio
 from contextlib import redirect_stdout
 import main
-from PyQt6.QtWidgets import QMainWindow, QApplication, QFileDialog, QInputDialog, QGraphicsScene, QGraphicsView
+from PyQt6.QtWidgets import QMainWindow, QApplication, QFileDialog, QInputDialog, QGraphicsScene, QGraphicsView, QGraphicsPixmapItem
 from PyQt6.QtCore import pyqtSlot, Qt
-from PyQt6.QtGui import QPixmap, QPainter
+from PyQt6.QtGui import QPixmap, QPainter, QImage
 from PyQt6 import uic
 
 import os
@@ -28,9 +28,15 @@ span=100
 max_power = 0.0
 min_power = 0.0
 
+# Load the models
+model_g_s = 'models/192_200Epochs_AllVideos.onnx'
+model_Grid = YOLO(model_g_s, task='detect')
+detector_grid = ObjectDetector(model=model_Grid, imgz=192)
+
 class Main(QMainWindow):
 
     filePath=''
+    test_frame = ""
 
     img_array1 = ["Capture 1,images\Capture1.jpg"]
     img_array2 = ["Capture 2,images\Capture2.jpg"]
@@ -76,6 +82,24 @@ class Main(QMainWindow):
         filePath = fname[0]
         self.filePath = fname[0]
         main.filePath = fname[0]
+        
+
+        test_video = cv2.VideoCapture(filePath)
+        ret, self.test_frame = test_video.read()
+        test_video.release()
+
+        height, width, channel = self.test_frame.shape
+        self.test_frame = cv2.resize(self.test_frame, (width // 2, height // 2))
+
+        bytes_per_line = 3 * width // 2
+        q_image = QImage(self.test_frame.data, width // 2, height // 2, bytes_per_line, QImage.Format.Format_BGR888)
+        scene = QGraphicsScene(0, 0, width // 2, height // 2)
+        pixmap_item = QGraphicsPixmapItem(QPixmap.fromImage(q_image))
+        scene.addItem(pixmap_item)
+        self.graphicsView.setScene(scene)
+        self.graphicsView.setRenderHint(QPainter.RenderHint.Antialiasing)
+        self.graphicsView.show()
+
 
         output = ("Please select the values for the video selected using the sample image below")
         self.label_2.setText(output)
@@ -169,20 +193,6 @@ class Main(QMainWindow):
         self.imgGotoPrevious.setEnabled(True)
         self.imgGotoNext.setEnabled(True)
         self.imgGotoLast.setEnabled(True)
-
-        scene = QGraphicsScene(0, 0, 0, 0)
-
-        Main.image_index = 0
-        image_prop = Main.image_array[Main.image_index]
-        self.imgTitle.setText(image_prop[0].split(',')[0])
-        image_path = image_prop[0].split(',')[1]
-        pixmap = QPixmap(image_path)
-        pixmapitem = scene.addPixmap(pixmap)
-        pixmapitem.setPos(0, 0)
-
-        self.graphicsView.setScene(scene)
-        self.graphicsView.setRenderHint(QPainter.RenderHint.Antialiasing)
-        self.graphicsView.show()
 
         image_number = Main.image_index + 1
         total_image_number = len(Main.image_array)

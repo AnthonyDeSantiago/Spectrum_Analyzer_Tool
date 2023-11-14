@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1410</width>
-    <height>958</height>
+    <width>1380</width>
+    <height>947</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -77,6 +77,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="centerButton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>70</x>
@@ -90,6 +93,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="referenceButton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>270</x>
@@ -103,6 +109,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="spanButton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>460</x>
@@ -169,9 +178,9 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>374</x>
+     <x>250</x>
      <y>209</y>
-     <width>301</width>
+     <width>211</width>
      <height>41</height>
     </rect>
    </property>
@@ -181,10 +190,13 @@
     </font>
    </property>
    <property name="text">
-    <string>Go</string>
+    <string>Model 1</string>
    </property>
   </widget>
   <widget class="QPushButton" name="minPowerButton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>650</x>
@@ -219,10 +231,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1050</x>
+     <x>1010</x>
      <y>50</y>
      <width>351</width>
-     <height>861</height>
+     <height>851</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -247,7 +259,7 @@
   <widget class="QLabel" name="eventLogText">
    <property name="geometry">
     <rect>
-     <x>1050</x>
+     <x>1010</x>
      <y>10</y>
      <width>351</width>
      <height>31</height>
@@ -267,10 +279,10 @@
   <widget class="QGraphicsView" name="graphicsView">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>22</x>
      <y>361</y>
-     <width>981</width>
-     <height>551</height>
+     <width>960</width>
+     <height>540</height>
     </rect>
    </property>
   </widget>
@@ -279,7 +291,7 @@
     <rect>
      <x>10</x>
      <y>300</y>
-     <width>1031</width>
+     <width>991</width>
      <height>16</height>
     </rect>
    </property>
@@ -290,17 +302,17 @@
   <widget class="QLabel" name="imgTitle">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>22</x>
      <y>320</y>
-     <width>981</width>
+     <width>961</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <pointsize>12</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -308,10 +320,13 @@
    </property>
   </widget>
   <widget class="QPushButton" name="imgGotoFirst">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>920</y>
+     <x>22</x>
+     <y>910</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -321,10 +336,13 @@
    </property>
   </widget>
   <widget class="QPushButton" name="imgGotoLast">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>920</x>
-     <y>920</y>
+     <x>890</x>
+     <y>910</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -334,10 +352,13 @@
    </property>
   </widget>
   <widget class="QPushButton" name="imgGotoPrevious">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>920</y>
+     <x>122</x>
+     <y>910</y>
      <width>61</width>
      <height>28</height>
     </rect>
@@ -347,10 +368,13 @@
    </property>
   </widget>
   <widget class="QPushButton" name="imgGotoNext">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>850</x>
-     <y>920</y>
+     <x>820</x>
+     <y>910</y>
      <width>61</width>
      <height>28</height>
     </rect>
@@ -362,9 +386,9 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>919</y>
-     <width>641</width>
+     <x>192</x>
+     <y>907</y>
+     <width>621</width>
      <height>31</height>
     </rect>
    </property>
@@ -397,6 +421,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="maxPowerButton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>840</x>
@@ -412,8 +439,8 @@
   <widget class="QPushButton" name="resetLog">
    <property name="geometry">
     <rect>
-     <x>1050</x>
-     <y>920</y>
+     <x>1010</x>
+     <y>910</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -425,8 +452,8 @@
   <widget class="QPushButton" name="downloadLog">
    <property name="geometry">
     <rect>
-     <x>1150</x>
-     <y>920</y>
+     <x>1110</x>
+     <y>910</y>
      <width>101</width>
      <height>28</height>
     </rect>
@@ -462,7 +489,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>686</x>
+     <x>690</x>
      <y>209</y>
      <width>111</width>
      <height>41</height>
@@ -475,6 +502,27 @@
    </property>
    <property name="text">
     <string>Reset</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="script2Button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>209</y>
+     <width>211</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Model 2</string>
    </property>
   </widget>
  </widget>

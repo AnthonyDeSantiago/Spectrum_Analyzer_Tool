@@ -521,7 +521,9 @@ class Main(QMainWindow):
         
         end_time = time.time()
         execution_time = end_time - start_time
+        total_vid_length = frame_nmr / fps
         print(f"Execution time: {execution_time} seconds")
+        print(f"Video length: {total_vid_length} seconds")
 
 
         video.release()
@@ -605,8 +607,10 @@ def draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_fre
     cv2.line(frame, (midpoint, y1), (midpoint, y2), (0, 0, 255), 2)
     cv2.putText(frame, horizontal_line_text, (x1 + 500, s_y1 - 10), font, font_scale, text_color, font_thickness)
     cv2.putText(frame, vertical_line_text, (midpoint + 10, 900), font, font_scale, text_color, font_thickness)
+    height, width, channel = frame.shape
+    
+    frame = cv2.resize(frame, (width // 2, height // 2))
     cv2.imshow("Visualizer", frame)
-
     return frame
 
 

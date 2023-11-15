@@ -417,7 +417,7 @@ class Main(QMainWindow):
 
         ret = True
 
-        show = True
+        show = self.displayCheckBox.isChecked()
 
         lb_freq = center_frequency - ((span / 1000)/2)
         ub_freq = center_frequency + ((span / 1000)/2)
@@ -427,8 +427,11 @@ class Main(QMainWindow):
 
         incomming_powers = []
 
+        name_time = datetime.now()
+        output_filename = "Out_"+ str(name_time.month) +"_"+ str(name_time.day)+"_"+str(name_time.year) +"_"+ str(name_time.hour)+"_"+ str(name_time.minute)+ "_" + str(name_time.second) + ".csv"
+
         start_time = time.time()
-        with open('output.csv', 'w', newline='') as csvfile:
+        with open(output_filename, 'w', newline='') as csvfile:
             fieldnames = ['Timestamp', 'Frequency (GHz)', 'Power (dBm)', 'Min Power (dBm)', 'Max Power (dBm)', 'Avg Power (dBm)']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 

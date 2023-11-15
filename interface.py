@@ -448,15 +448,14 @@ class Main(QMainWindow):
                         if frame_nmr % read_freq == 0:
                             num_classes, x1, y1, x2, y2, conf, class_id, s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = process_frame(frame, detector_grid)
                             timestamp, estimated_center_frequency, estimated_power = get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, lb_freq, ub_freq, lb_power, ub_power)
-                            if check_for_check == True:
-                                if num_classes >= 2:
-                                    if show:
-                                        draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
-                                        if cv2.waitKey(2) == ord('q'):
-                                            break
-                                    incomming_powers.append(estimated_power)
-                                    # Write the data to the CSV file
-                                    writer.writerow({'Timestamp': timestamp, 'Frequency (GHz)': estimated_center_frequency, 'Power (dBm)': estimated_power, 'Min Power (dBm)': 0, 'Max Power (dBm)': 0, 'Avg Power (dBm)': 0})
+                            if num_classes >= 2:
+                                if show:
+                                    draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
+                                    if cv2.waitKey(2) == ord('q'):
+                                        break
+                                incomming_powers.append(estimated_power)
+                                # Write the data to the CSV file
+                                writer.writerow({'Timestamp': timestamp, 'Frequency (GHz)': estimated_center_frequency, 'Power (dBm)': estimated_power, 'Min Power (dBm)': 0, 'Max Power (dBm)': 0, 'Avg Power (dBm)': 0})
                             else:
                                 if len(incomming_powers) > 0:
                                     minumum_power = min(incomming_powers)
@@ -532,7 +531,7 @@ def get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2
 
     timestamp = frame_nmr / fps
     estimated_center_frequency = ((midpoint - x1) / grid_size_x) * range_freq + lb_freq
-    estimated_power = ((s_y1 - y1) / grid_size_y) * range_power + lb_power
+    estimated_power = lb_power - ((s_y1 - y1) / grid_size_y) * range_power
 
     return timestamp, estimated_center_frequency, estimated_power
 

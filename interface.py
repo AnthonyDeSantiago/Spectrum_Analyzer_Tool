@@ -85,34 +85,41 @@ class Main(QMainWindow):
         self.filePath = fname[0]
         main.filePath = fname[0]
         
+        if filePath != '':
+            test_video = cv2.VideoCapture(filePath)
+            ret, self.test_frame = test_video.read()
+            test_video.release()
 
-        test_video = cv2.VideoCapture(filePath)
-        ret, self.test_frame = test_video.read()
-        test_video.release()
+            height, width, channel = self.test_frame.shape
+            self.test_frame = cv2.resize(self.test_frame, (width // 2, height // 2))
 
-        height, width, channel = self.test_frame.shape
-        self.test_frame = cv2.resize(self.test_frame, (width // 2, height // 2))
+            bytes_per_line = 3 * width // 2
+            q_image = QImage(self.test_frame.data, width // 2, height // 2, bytes_per_line, QImage.Format.Format_BGR888)
+            scene = QGraphicsScene(0, 0, width // 2, height // 2)
+            pixmap_item = QGraphicsPixmapItem(QPixmap.fromImage(q_image))
+            scene.addItem(pixmap_item)
+            self.graphicsView.setScene(scene)
+            self.graphicsView.setRenderHint(QPainter.RenderHint.Antialiasing)
+            self.graphicsView.show()
 
-        bytes_per_line = 3 * width // 2
-        q_image = QImage(self.test_frame.data, width // 2, height // 2, bytes_per_line, QImage.Format.Format_BGR888)
-        scene = QGraphicsScene(0, 0, width // 2, height // 2)
-        pixmap_item = QGraphicsPixmapItem(QPixmap.fromImage(q_image))
-        scene.addItem(pixmap_item)
-        self.graphicsView.setScene(scene)
-        self.graphicsView.setRenderHint(QPainter.RenderHint.Antialiasing)
-        self.graphicsView.show()
+            self.imgTitle.setText("Sample Image of Video")
 
+            output = ("Please select the values for the video selected using the sample image below")
+            self.label_2.setText(output)
 
-        output = ("Please select the values for the video selected using the sample image below")
-        self.label_2.setText(output)
+            self.eventLog.appendPlainText("Video Selected: " + filePath)
 
-        self.eventLog.appendPlainText("Video Selected: " + filePath)
+            self.centerButton.setEnabled(True)
+            self.referenceButton.setEnabled(True)
+            self.spanButton.setEnabled(True)
+            self.minPowerButton.setEnabled(True)
+            self.maxPowerButton.setEnabled(True)
+        else:
+            output = ("No Video Selected!")
+            self.label_2.setText(output)
 
-        self.centerButton.setEnabled(True)
-        self.referenceButton.setEnabled(True)
-        self.spanButton.setEnabled(True)
-        self.minPowerButton.setEnabled(True)
-        self.maxPowerButton.setEnabled(True)
+    # def var_check(self):
+    #     if ()
 
     def set_center(self):
         d, ok = QInputDialog().getDouble(self, "Center Frequency",
@@ -122,6 +129,7 @@ class Main(QMainWindow):
         if ok:
             self.label_6.setText("Center: "+ str(d) + " GHz")
             main.center_frequency = d
+            self.center_frequency = d
             self.eventLog.appendPlainText("Center Frequency Entered: " + str(d))
         else:
             self.label_6.setText("No Center Selected!")
@@ -134,6 +142,7 @@ class Main(QMainWindow):
         if ok:
             self.label_7.setText("Reference: "+ str(d) +" dBm")
             main.reference_level = d
+            self.reference_level = d
             self.eventLog.appendPlainText("Reference Level Entered: " + str(d))
         else:
             self.label_7.setText("No Reference Selected!")
@@ -146,6 +155,7 @@ class Main(QMainWindow):
         if ok:
             self.label_8.setText("Span: "+ str(d) +" GHz")
             main.span = d
+            self.span = d
             self.eventLog.appendPlainText("Span Entered: " + str(d))
         else:
             self.label_8.setText("No Span Selected!")
@@ -158,6 +168,7 @@ class Main(QMainWindow):
         if ok:
             self.label_9.setText("Minimum Power: "+ str(d) +" dB")
             main.min_power = d
+            self.min_power = d
             self.eventLog.appendPlainText("Minimum Power Entered: " + str(d))
         else:
             self.label_9.setText("No Minimum Power Selected!")
@@ -373,7 +384,7 @@ class Main(QMainWindow):
 
     def download_log(self):
         time = datetime.now()
-        text_file = open("log-"+str(time.month)+"-"+str(time.day)+"-"+str(time.year)+"-"+str(time.hour)+"-"+str(time.minute)+".txt", "w")
+        text_file = open("log_"+str(time.month)+"_"+str(time.day)+"_"+str(time.year)+"_"+str(time.hour)+"_"+str(time.minute)+".txt", "w")
 
         # Take content
         content = self.eventLog.toPlainText()
@@ -417,7 +428,7 @@ class Main(QMainWindow):
 
         ret = True
 
-        show = True
+        show = check_for_check
 
         lb_freq = center_frequency - ((span / 1000)/2)
         ub_freq = center_frequency + ((span / 1000)/2)
@@ -450,7 +461,7 @@ class Main(QMainWindow):
                             timestamp, estimated_center_frequency, estimated_power = get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, lb_freq, ub_freq, lb_power, ub_power)
                             if num_classes >= 2:
                                 if show:
-                                    draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
+                                    display_frame = draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
                                     if cv2.waitKey(2) == ord('q'):
                                         break
                                 incomming_powers.append(estimated_power)

@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>355</x>
-     <y>60</y>
+     <y>50</y>
      <width>301</width>
      <height>41</height>
     </rect>
@@ -35,7 +35,7 @@
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>0</y>
+     <y>-5</y>
      <width>651</width>
      <height>61</height>
     </rect>
@@ -56,7 +56,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>104</y>
+     <y>94</y>
      <width>971</width>
      <height>31</height>
     </rect>
@@ -83,7 +83,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>140</y>
+     <y>130</y>
      <width>141</width>
      <height>28</height>
     </rect>
@@ -99,7 +99,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>140</y>
+     <y>130</y>
      <width>131</width>
      <height>28</height>
     </rect>
@@ -115,7 +115,7 @@
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>140</y>
+     <y>130</y>
      <width>131</width>
      <height>28</height>
     </rect>
@@ -127,8 +127,8 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>175</y>
+     <x>51</x>
+     <y>165</y>
      <width>191</width>
      <height>16</height>
     </rect>
@@ -143,8 +143,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>175</y>
+     <x>251</x>
+     <y>165</y>
      <width>181</width>
      <height>16</height>
     </rect>
@@ -159,8 +159,8 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>175</y>
+     <x>441</x>
+     <y>165</y>
      <width>181</width>
      <height>20</height>
     </rect>
@@ -174,12 +174,12 @@
   </widget>
   <widget class="QPushButton" name="script1Button">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>209</y>
+     <y>229</y>
      <width>211</width>
      <height>41</height>
     </rect>
@@ -190,7 +190,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Model 1</string>
+    <string>Trained</string>
    </property>
   </widget>
   <widget class="QPushButton" name="minPowerButton">
@@ -200,7 +200,7 @@
    <property name="geometry">
     <rect>
      <x>630</x>
-     <y>140</y>
+     <y>130</y>
      <width>131</width>
      <height>28</height>
     </rect>
@@ -212,8 +212,8 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>630</x>
-     <y>175</y>
+     <x>631</x>
+     <y>165</y>
      <width>181</width>
      <height>20</height>
     </rect>
@@ -290,7 +290,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>300</y>
+     <y>310</y>
      <width>991</width>
      <height>16</height>
     </rect>
@@ -303,7 +303,7 @@
    <property name="geometry">
     <rect>
      <x>22</x>
-     <y>320</y>
+     <y>324</y>
      <width>961</width>
      <height>31</height>
     </rect>
@@ -407,8 +407,8 @@
   <widget class="QLabel" name="maxPowerOutput">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>175</y>
+     <x>821</x>
+     <y>165</y>
      <width>181</width>
      <height>20</height>
     </rect>
@@ -427,7 +427,7 @@
    <property name="geometry">
     <rect>
      <x>820</x>
-     <y>140</y>
+     <y>130</y>
      <width>131</width>
      <height>28</height>
     </rect>
@@ -466,9 +466,9 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>249</y>
+     <y>270</y>
      <width>631</width>
-     <height>51</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="font">
@@ -485,12 +485,12 @@
   </widget>
   <widget class="QPushButton" name="script2Button">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>
      <x>510</x>
-     <y>209</y>
+     <y>229</y>
      <width>211</width>
      <height>41</height>
     </rect>
@@ -501,20 +501,44 @@
     </font>
    </property>
    <property name="text">
-    <string>Model 2</string>
+    <string>Unsupervised</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="displayCheckBox">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>220</y>
+     <y>240</y>
      <width>121</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
     <string>Display Process</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="modelSelectText">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>185</y>
+     <width>631</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

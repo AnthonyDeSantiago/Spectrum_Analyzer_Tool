@@ -29,6 +29,8 @@ span=100
 max_power = 0.0
 min_power = 0.0
 
+
+
 # Load the models
 model_g_s = 'models/192_200Epochs_AllVideos.onnx'
 model_Grid = YOLO(model_g_s, task='detect')
@@ -38,6 +40,12 @@ class Main(QMainWindow):
 
     filePath=''
     test_frame = ""
+
+    center_frequency= None
+    reference_level= None
+    span= None
+    max_power = None
+    min_power = None
 
     img_array1 = ["Capture 1,images\Capture1.jpg"]
     img_array2 = ["Capture 2,images\Capture2.jpg"]
@@ -114,12 +122,20 @@ class Main(QMainWindow):
             self.spanButton.setEnabled(True)
             self.minPowerButton.setEnabled(True)
             self.maxPowerButton.setEnabled(True)
+
         else:
             output = ("No Video Selected!")
             self.label_2.setText(output)
 
-    # def var_check(self):
-    #     if ()
+    def var_check(self):
+        if self.center_frequency != None and self.reference_level != None and self.span != None and self.max_power != None and self.min_power != None:
+            self.script1Button.setEnabled(True)
+            self.script2Button.setEnabled(True)
+            self.displayCheckBox.setEnabled(True)
+            self.modelSelectText.setText("Select a script to run")
+        # else:
+        #     self.eventLog.appendPlainText(" Center =" + str(self.center_frequency) + " ref =" + str(self.reference_level) + " span =" + str(self.span) + 
+        #                                   " min =" + str(self.min_power) + " max =" + str(self.max_power))
 
     def set_center(self):
         d, ok = QInputDialog().getDouble(self, "Center Frequency",
@@ -131,6 +147,7 @@ class Main(QMainWindow):
             main.center_frequency = d
             self.center_frequency = d
             self.eventLog.appendPlainText("Center Frequency Entered: " + str(d))
+            self.var_check()
         else:
             self.label_6.setText("No Center Selected!")
 
@@ -144,6 +161,7 @@ class Main(QMainWindow):
             main.reference_level = d
             self.reference_level = d
             self.eventLog.appendPlainText("Reference Level Entered: " + str(d))
+            self.var_check()
         else:
             self.label_7.setText("No Reference Selected!")
 
@@ -157,6 +175,7 @@ class Main(QMainWindow):
             main.span = d
             self.span = d
             self.eventLog.appendPlainText("Span Entered: " + str(d))
+            self.var_check()
         else:
             self.label_8.setText("No Span Selected!")
 
@@ -170,6 +189,7 @@ class Main(QMainWindow):
             main.min_power = d
             self.min_power = d
             self.eventLog.appendPlainText("Minimum Power Entered: " + str(d))
+            self.var_check()
         else:
             self.label_9.setText("No Minimum Power Selected!")
 
@@ -181,7 +201,9 @@ class Main(QMainWindow):
             if ok:
                 self.maxPowerOutput.setText("Maximum Power: "+ str(d) +" dB")
                 main.max_power = d
+                self.max_power = d
                 self.eventLog.appendPlainText("Maximum Power Entered: " + str(d))
+                self.var_check()
             else:
                 self.maxPowerOutput.setText("No Maximum Power Selected!")
 
@@ -207,6 +229,20 @@ class Main(QMainWindow):
         self.imgGotoPrevious.setEnabled(True)
         self.imgGotoNext.setEnabled(True)
         self.imgGotoLast.setEnabled(True)
+
+        scene = QGraphicsScene(0, 0, 0, 0)
+
+        Main.image_index = 0
+        image_prop = Main.image_array[Main.image_index]
+        self.imgTitle.setText(image_prop[0].split(',')[0])
+        image_path = image_prop[0].split(',')[1]
+        pixmap = QPixmap(image_path)
+        pixmapitem = scene.addPixmap(pixmap)
+        pixmapitem.setPos(0, 0)
+
+        self.graphicsView.setScene(scene)
+        self.graphicsView.setRenderHint(QPainter.RenderHint.Antialiasing)
+        self.graphicsView.show()
 
         image_number = Main.image_index + 1
         total_image_number = len(Main.image_array)
@@ -464,7 +500,7 @@ class Main(QMainWindow):
                             timestamp, estimated_center_frequency, estimated_power = get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, lb_freq, ub_freq, lb_power, ub_power)
                             if num_classes >= 2:
                                 if show:
-                                    display_frame = draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
+                                    draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
                                     if cv2.waitKey(2) == ord('q'):
                                         break
                                 incomming_powers.append(estimated_power)

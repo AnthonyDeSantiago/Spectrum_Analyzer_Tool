@@ -17,17 +17,11 @@ filePath=''
 center_frequency=1.0
 reference_level=0.0
 span=100
+IOC=-10.0
 max_power = 0.0
 min_power = 0.0
 
-# def get_screen():
-#     video_path = filePath
-#     video = cv2.VideoCapture(video_path)
-#     interface.Main.thumbnail = video.read()
-
-#     return video.read()
-
-# def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100):
+#def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100, IOC=-10.0):
 
 
 ###################################################################################################
@@ -358,7 +352,7 @@ def script_main():
     start = time.time()
         
     #run signal analysis (includes appending results to CSV)
-    signalSample = GetSignalWithCV2(frames, consecutive_frame_count, median_background_image, reference_level=0.0, center_frequency=1.0, span=100)
+    signalSample = GetSignalWithCV2(frames, consecutive_frame_count, median_background_image, reference_level=0.0, center_frequency=1.0, span=100, IOC=-10.0)
     signalSample.get_signal()
 
     end = time.time()

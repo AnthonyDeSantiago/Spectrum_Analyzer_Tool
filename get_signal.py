@@ -11,7 +11,7 @@ assetDirAdd = 'assets/'
 #####################################################################
 
 class GetSignalWithCV2:
-    def __init__(self, frames, consecutive_frames=4, median_background_image='',reference_level=0.0, center_frequency=1.0, span=100):
+    def __init__(self, frames, consecutive_frames=4, median_background_image='',reference_level=0.0, center_frequency=1.0, span=100, IOC=-10.0):
         self.frameset = frames
         self.consecutive_frames = int(consecutive_frames)
         self.median_bg = median_background_image
@@ -20,6 +20,7 @@ class GetSignalWithCV2:
         self.reference_level = reference_level
         self.center_frequency = center_frequency
         self.span = span
+        self.IOC = IOC
     
     ### ISOLATE THE SIGNAL FROM THE SPECTRUM ANALYZER
     def get_signal(self):
@@ -98,7 +99,7 @@ class GetSignalWithCV2:
 
         height, width = self.frameset[1].shape
 
-        dataCleaner = CleanData(self.boxes, width, height, reference_level=0.0, center_frequency=1.0, span=100)
+        dataCleaner = CleanData(self.boxes, width, height, self.reference_level, self.center_frequency, self.span, self.IOC)
         dataCleaner.get_results()
 
         # WRITE BOUNDING BOX INFORMATION TO CSV

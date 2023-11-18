@@ -5,17 +5,208 @@ import cv2
 import numpy as np
 from ObjectDetector import ObjectDetector
 from get_signal import GetSignalWithCV2
+import os
+import multiprocessing
+import csv
 import time
+import interface
 from decord import VideoReader
 from decord import cpu, gpu
 
 filePath=''
-reference_level=0.0
 center_frequency=1.0
+reference_level=0.0
 span=100
 IOC=-10.0
+max_power = 0.0
+min_power = 0.0
 
 #def script_main(filePath='', reference_level=0.0, center_frequency=1.0, span=100, IOC=-10.0):
+
+
+###################################################################################################
+# TRAINED ML MODEL APPROACH
+###################################################################################################
+
+def script_trained_ml_approach():
+    print("Script_main adjusted called")
+    # Load the models
+    model_g_s = 'models/192_300Epochs_AllVideos.onnx'
+    # model_g_s = 'CreateDataSet/runs/detect/train12/weights/best.onnx'
+    model_Grid = YOLO(model_g_s, task='detect')
+
+
+    # Load the video
+    video_path = filePath
+    video = cv2.VideoCapture(video_path)
+
+
+    # Grabbing these just in case
+    width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(video.get(cv2.CAP_PROP_FPS))
+
+
+    # Instantiate object detectors here
+    detector_grid = ObjectDetector(model=model_Grid, imgz=192)
+
+    # A frame count so we can perform actions every ith, jth, kth, etc frame
+    frame_nmr = 0
+
+    # The frequency we want to perform actions
+    read_freq = fps# <-- Gonna append to a list a frame once per second of video
+
+    ret = True
+
+    show = True
+
+    lb_freq = center_frequency - ((span / 1000)/2)
+    ub_freq = center_frequency + ((span / 1000)/2)
+
+    lb_power = 0
+    ub_power = 100
+
+    start_time = time.time()
+    with open('output.csv', 'w', newline='') as csvfile:
+        fieldnames = ['Timestamp', 'Estimated Center Frequency (GHz)', 'Estimated Power (dB)']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Write the header row
+        writer.writeheader()
+
+        start_time = time.time()
+        while ret:
+            if frame_nmr % read_freq == 0:
+                video.set(cv2.CAP_PROP_POS_FRAMES, frame_nmr)
+                ret, frame = video.read()
+
+                if not ret:
+                    break
+
+                if ret:
+                    if frame_nmr % read_freq == 0:
+                        num_classes, x1, y1, x2, y2, conf, class_id, s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = process_frame(frame, detector_grid)
+                        timestamp, estimated_center_frequency, estimated_power = get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, lb_freq, ub_freq, lb_power, ub_power)
+                        if show and num_classes == 2:
+                            draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power)
+                            if cv2.waitKey(2) == ord('q'):
+                                break
+                        if num_classes >= 2:
+                            
+                            # Write the data to the CSV file
+                            writer.writerow({'Timestamp': timestamp, 'Estimated Center Frequency (GHz)': estimated_center_frequency, 'Estimated Power (dB)': estimated_power})
+                        else:
+                            writer.writerow({'Timestamp': timestamp, 'Estimated Center Frequency (GHz)': 0, 'Estimated Power (dB)': 0})
+
+            frame_nmr = frame_nmr + 1
+
+    
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Execution time: {execution_time} seconds")
+
+
+    video.release()
+    cv2.destroyAllWindows()
+
+
+
+def process_batch(start_frame, end_frame, video, detector_grid, lb_freq, ub_freq, lb_power, ub_power, range_freq, range_power, read_freq):
+    for frame_nmr in range(start_frame, end_frame):
+        ret, frame = video.read()
+        if not ret:
+            return
+
+        if frame_nmr % read_freq == 0:
+            num_classes, x1, y1, x2, y2, conf, class_id, s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = process_frame(frame, detector_grid)
+            if num_classes < 2 and num_classes != 0:
+                x = 1
+            else:
+                grid_size_x = x2 - x1
+                grid_size_y = y2 - y1
+
+                midpoint = s_x2 - (s_x2 - s_x1) // 2
+                estimated_center_frequency = ((midpoint - x1) / grid_size_x) * range_freq + lb_freq
+                vertical_line_text = vertical_line_text + str(estimated_center_frequency) + " GHz"
+
+                estimated_power = ((s_y1 - y1) / grid_size_y) * range_power + lb_power
+                horizontal_line_text = horizontal_line_text + "{:.{}f}".format(estimated_power, 2) + " dB"
+
+
+def process_frame(frame, detector):
+    boxes = detector.getBoundingBoxes(frame)
+    
+    num_classes = 0
+    x1, y1, x2, y2, conf, class_id = 0, 0, 0, 0, 0, 0 
+    s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = 0, 0, 0, 0, 0, 0 
+
+    if len(boxes) > 0:
+        box = boxes[0]
+        x1, y1, x2, y2, conf, class_id = map(int, box)
+        num_classes = 1
+
+    if len(boxes) > 1:
+        box = boxes[1]
+        s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id = map(int, box)
+        num_classes = 2
+
+    return num_classes, x1, y1, x2, y2, conf, class_id, s_x1, s_y1, s_x2, s_y2, s_conf, s_class_id
+
+
+def get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, lb_freq, ub_freq, lb_power, ub_power):
+    grid_size_x = x2 - x1
+    grid_size_y = y2 - y1
+    range_freq = ub_freq - lb_freq
+    range_power = ub_power - lb_power
+
+    midpoint = s_x2 - (s_x2 - s_x1) // 2
+
+    timestamp = frame_nmr / fps
+    estimated_center_frequency = ((midpoint - x1) / grid_size_x) * range_freq + lb_freq
+    estimated_power = ((s_y1 - y1) / grid_size_y) * range_power + lb_power
+
+    return timestamp, estimated_center_frequency, estimated_power
+
+
+def draw_hud(frame, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2, estimated_center_frequency, estimated_power):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    text_color = (100, 255, 100)
+    font_scale = 1
+    font_thickness = 2
+
+    horizontal_line_text = "Power: "
+    vertical_line_text = "Center Freq: "
+
+    vertical_line_text = vertical_line_text + str(estimated_center_frequency) + " GHz"
+    horizontal_line_text = horizontal_line_text + "{:.{}f}".format(estimated_power, 2) + " dB"
+
+    midpoint = s_x2 - (s_x2 - s_x1) // 2
+    frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    frame = cv2.rectangle(frame, (s_x1, s_y1), (s_x2, s_y2), (0, 255, 0), 2)
+    cv2.line(frame, (x1, s_y1), (x2, s_y1), (0, 0, 255), 2)
+    cv2.line(frame, (midpoint, y1), (midpoint, y2), (0, 0, 255), 2)
+    cv2.putText(frame, horizontal_line_text, (x1 + 500, s_y1 - 10), font, font_scale, text_color, font_thickness)
+    cv2.putText(frame, vertical_line_text, (midpoint + 10, 900), font, font_scale, text_color, font_thickness)
+    cv2.imshow("Visualizer", frame)
+
+    return frame
+
+
+def get_cpu_info():
+    num_cores = os.cpu_count()
+
+    num_available_cores = multiprocessing.cpu_count()
+    print(f"Number of CPU cores: {num_cores}")
+    print(f"Number of available CPU cores: {num_available_cores}")
+
+    return num_cores, num_available_cores
+
+
+
+
+###################################################################################################
+# ORIGINAL APPROACH
+###################################################################################################
 
 def script_main():
     total_start = time.time()    
@@ -183,6 +374,4 @@ def script_main():
     print("\tApproximate video length >>> " + str(approx_video_seconds) + "s")
     print("\tTime cost per second of video >>> " + str(tps) + "s/s")
     print("\tVideo processed " + str((abs(total_time - approx_video_seconds)/approx_video_seconds)*100) + "% faster than real time\n")
-
-
 

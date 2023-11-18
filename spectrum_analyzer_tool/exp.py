@@ -4,13 +4,13 @@ from ultralytics import YOLO
 import cv2
 import torch
 import numpy as np
-from ObjectDetector import ObjectDetector
-from ImageProcessor import ImageProcessor
+from .ObjectDetector import ObjectDetector
+from .ImageProcessor import ImageProcessor
 #from Util import util
 
 # Load the models
-model_path_screen_finder = 'models/Optimized_Resized_cl_1.onnx'
-model_path_grid_finder = 'models/Grid_LowRes_1-4_224.onnx'
+model_path_screen_finder = 'spectrum_analyzer_tool/models/Optimized_Resized_cl_1.onnx'
+model_path_grid_finder = 'spectrum_analyzer_tool/models/Grid_LowRes_1-4_224.onnx'
 model_SpecScreen = YOLO(model_path_screen_finder, task='detect') #<---Model specifically for finding spectrum analyzer screen
 model_Grid = YOLO(model_path_grid_finder, task='detect')
 

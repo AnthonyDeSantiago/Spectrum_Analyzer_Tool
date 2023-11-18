@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1371</width>
-    <height>947</height>
+    <width>1262</width>
+    <height>757</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,15 +16,15 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>355</x>
-     <y>50</y>
-     <width>301</width>
-     <height>41</height>
+     <x>384</x>
+     <y>13</y>
+     <width>131</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -34,30 +34,30 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>-5</y>
-     <width>651</width>
-     <height>61</height>
+     <x>25</x>
+     <y>13</y>
+     <width>351</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
-    <string>Please select the Spectrum Analyzer recording using the button below</string>
+    <string>Please select the Spectrum Analyzer recording</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>94</y>
-     <width>971</width>
+     <x>39</x>
+     <y>43</y>
+     <width>821</width>
      <height>31</height>
     </rect>
    </property>
@@ -82,11 +82,16 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>130</y>
-     <width>141</width>
+     <x>25</x>
+     <y>79</y>
+     <width>131</width>
      <height>28</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Set Center Frequency</string>
@@ -98,11 +103,16 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>130</y>
+     <x>204</x>
+     <y>79</y>
      <width>131</width>
      <height>28</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Set Reference Level</string>
@@ -114,11 +124,16 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>130</y>
+     <x>384</x>
+     <y>79</y>
      <width>131</width>
      <height>28</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Set Span</string>
@@ -127,11 +142,16 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>51</x>
-     <y>165</y>
-     <width>191</width>
+     <x>25</x>
+     <y>109</y>
+     <width>161</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
@@ -143,11 +163,16 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>251</x>
-     <y>165</y>
-     <width>181</width>
+     <x>205</x>
+     <y>109</y>
+     <width>171</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
@@ -159,11 +184,16 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>441</x>
-     <y>165</y>
-     <width>181</width>
+     <x>385</x>
+     <y>109</y>
+     <width>171</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
@@ -178,15 +208,15 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>229</y>
-     <width>211</width>
-     <height>41</height>
+     <x>315</x>
+     <y>134</y>
+     <width>131</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -199,11 +229,16 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>630</x>
-     <y>130</y>
+     <x>564</x>
+     <y>79</y>
      <width>131</width>
      <height>28</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Set Min Power</string>
@@ -212,11 +247,16 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>631</x>
-     <y>165</y>
-     <width>181</width>
+     <x>565</x>
+     <y>109</y>
+     <width>161</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
@@ -231,10 +271,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1010</x>
-     <y>50</y>
+     <x>900</x>
+     <y>40</y>
      <width>351</width>
-     <height>851</height>
+     <height>671</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -259,15 +299,15 @@
   <widget class="QLabel" name="eventLogText">
    <property name="geometry">
     <rect>
-     <x>1010</x>
-     <y>10</y>
+     <x>899</x>
+     <y>5</y>
      <width>351</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -280,9 +320,9 @@
    <property name="geometry">
     <rect>
      <x>22</x>
-     <y>361</y>
-     <width>960</width>
-     <height>540</height>
+     <y>231</y>
+     <width>854</width>
+     <height>480</height>
     </rect>
    </property>
   </widget>
@@ -290,8 +330,8 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>310</y>
-     <width>991</width>
+     <y>190</y>
+     <width>881</width>
      <height>16</height>
     </rect>
    </property>
@@ -303,9 +343,9 @@
    <property name="geometry">
     <rect>
      <x>22</x>
-     <y>324</y>
-     <width>961</width>
-     <height>31</height>
+     <y>204</y>
+     <width>851</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="font">
@@ -326,7 +366,7 @@
    <property name="geometry">
     <rect>
      <x>22</x>
-     <y>910</y>
+     <y>720</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -341,8 +381,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>890</x>
-     <y>910</y>
+     <x>785</x>
+     <y>720</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -358,7 +398,7 @@
    <property name="geometry">
     <rect>
      <x>122</x>
-     <y>910</y>
+     <y>720</y>
      <width>61</width>
      <height>28</height>
     </rect>
@@ -373,8 +413,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>910</y>
+     <x>715</x>
+     <y>720</y>
      <width>61</width>
      <height>28</height>
     </rect>
@@ -386,15 +426,15 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>192</x>
-     <y>907</y>
-     <width>621</width>
+     <x>182</x>
+     <y>717</y>
+     <width>531</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <pointsize>11</pointsize>
     </font>
    </property>
    <property name="text">
@@ -407,11 +447,16 @@
   <widget class="QLabel" name="maxPowerOutput">
    <property name="geometry">
     <rect>
-     <x>821</x>
-     <y>165</y>
-     <width>181</width>
+     <x>735</x>
+     <y>109</y>
+     <width>161</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
@@ -426,21 +471,26 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>130</y>
+     <x>734</x>
+     <y>79</y>
      <width>131</width>
      <height>28</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
    <property name="text">
-    <string>Max Power</string>
+    <string>Set Max Power</string>
    </property>
   </widget>
   <widget class="QPushButton" name="resetLog">
    <property name="geometry">
     <rect>
-     <x>1010</x>
-     <y>910</y>
+     <x>1050</x>
+     <y>720</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -452,8 +502,8 @@
   <widget class="QPushButton" name="downloadLog">
    <property name="geometry">
     <rect>
-     <x>1110</x>
-     <y>910</y>
+     <x>1150</x>
+     <y>720</y>
      <width>101</width>
      <height>28</height>
     </rect>
@@ -465,15 +515,15 @@
   <widget class="QLabel" name="scriptStatus">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>270</y>
+     <x>135</x>
+     <y>164</y>
      <width>631</width>
-     <height>41</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -489,15 +539,15 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>229</y>
-     <width>211</width>
-     <height>41</height>
+     <x>455</x>
+     <y>134</y>
+     <width>131</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -510,8 +560,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>240</y>
+     <x>595</x>
+     <y>140</y>
      <width>121</width>
      <height>20</height>
     </rect>
@@ -523,22 +573,22 @@
   <widget class="QLabel" name="modelSelectText">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>185</y>
-     <width>631</width>
-     <height>41</height>
+     <x>35</x>
+     <y>135</y>
+     <width>271</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
     <string/>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
  </widget>

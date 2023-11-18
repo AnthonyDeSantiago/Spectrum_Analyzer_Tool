@@ -4,7 +4,7 @@ import time
 import io
 import asyncio
 from contextlib import redirect_stdout
-import main
+from . import main
 from PyQt6.QtWidgets import QMainWindow, QApplication, QFileDialog, QInputDialog, QGraphicsScene, QGraphicsView, QGraphicsPixmapItem
 from PyQt6.QtCore import pyqtSlot, Qt
 from PyQt6.QtGui import QPixmap, QPainter, QImage
@@ -17,7 +17,7 @@ import csv
 from ultralytics import YOLO
 import cv2
 import numpy as np
-from ObjectDetector import ObjectDetector
+from .ObjectDetector import ObjectDetector
 
 
 str_out = io.StringIO()
@@ -32,7 +32,7 @@ min_power = 0.0
 
 
 # Load the models
-model_g_s = 'models/192_200Epochs_AllVideos.onnx'
+model_g_s = 'spectrum_analyzer_tool/models/192_200Epochs_AllVideos.onnx'
 model_Grid = YOLO(model_g_s, task='detect')
 detector_grid = ObjectDetector(model=model_Grid, imgz=192)
 
@@ -57,7 +57,7 @@ class Main(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        uic.loadUi("pyqt.ui", self)
+        uic.loadUi("spectrum_analyzer_tool/pyqt.ui", self)
 
         self.pushButton.clicked.connect(self.open_dialog)
 
@@ -437,7 +437,7 @@ class Main(QMainWindow):
 
 
         # Load the models
-        model_g_s = 'models/192_200Epochs_AllVideos.onnx'
+        model_g_s = 'spectrum_analyzer_tool/models/192_200Epochs_AllVideos.onnx'
         # model_g_s = 'CreateDataSet/runs/detect/train12/weights/best.onnx'
         model_Grid = YOLO(model_g_s, task='detect')
 

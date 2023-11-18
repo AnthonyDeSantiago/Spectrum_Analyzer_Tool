@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import csv
-from clean_data import CleanData 
+from .clean_data import CleanData 
 
 # CAN UPDATE THIS IN THE FUTURE TO CHOOSE WHERE ON USERS MACHINE THE OUTPUT GOES
 assetDirAdd = 'assets/' 

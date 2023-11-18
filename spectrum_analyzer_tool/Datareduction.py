@@ -1,6 +1,6 @@
 import csv
-from ObjectDetector import ObjectDetector
-from Util import util
+from .ObjectDetector import ObjectDetector
+from .Util import util
 class ImageDataProcessor:
     def __init__(self, binary_image_data):
         self.data = binary_image_data

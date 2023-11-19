@@ -4,6 +4,7 @@ import csv
 import time
 import copy
 from os import path
+from datetime import datetime
 
 # CAN UPDATE THIS IN THE FUTURE TO CHOOSE WHERE ON USERS MACHINE THE OUTPUT GOES
 assetDirAdd = path.abspath(path.join(path.dirname(__file__),'assets/'))
@@ -105,7 +106,7 @@ class CleanData:
             if second_counter == 0:
                 self.results.append([test,0,0,0,0,0,0])
     
-        print(self.results)
+        #print(self.results)
         self.results.sort()
 
         end = time.time()
@@ -120,7 +121,10 @@ class CleanData:
 
         header = ['timestamp', 'top left box coord', 'bottom right box coord', 'box width', 'box height', 'max power', 'frequency']
 
-        with open(assetDirAdd + 'out.csv', 'w', encoding='UTF8', newline='') as f:
+        name_time = datetime.now()
+        output_filename = "Unsupervised_Out_"+ str(name_time.month) +"_"+ str(name_time.day)+"_"+str(name_time.year) +"_"+ str(name_time.hour)+"_"+ str(name_time.minute)+ "_" + str(name_time.second) + ".csv"
+
+        with open(path.abspath(path.join('.',output_filename)), 'w', encoding='UTF8', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(header)
 

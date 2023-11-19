@@ -476,8 +476,8 @@ class Main(QMainWindow):
         incomming_powers = []
 
         name_time = datetime.now()
-        output_filename = "Out_"+ str(name_time.month) +"_"+ str(name_time.day)+"_"+str(name_time.year) +"_"+ str(name_time.hour)+"_"+ str(name_time.minute)+ "_" + str(name_time.second) + ".csv"
-        output_path = path.abspath(path.join('..',output_filename))
+        output_filename = "Trained_Out_"+ str(name_time.month) +"_"+ str(name_time.day)+"_"+str(name_time.year) +"_"+ str(name_time.hour)+"_"+ str(name_time.minute)+ "_" + str(name_time.second) + ".csv"
+        output_path = path.abspath(path.join('.',output_filename))
 
         start_time = time.time()
         with open(output_path, 'w', newline='') as csvfile:

@@ -15,6 +15,7 @@ To streamline and enhance this critical analysis, our project aimed to develop a
 - Identification of a measured signal’s center frequency and peak amplitude.
 
 **Running the Application**
+
 First install any missing dependencies:
 ```bash
 pip install -r requirements.txt

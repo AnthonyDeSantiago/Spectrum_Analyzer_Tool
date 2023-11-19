@@ -6,11 +6,12 @@ import torch
 import numpy as np
 from .ObjectDetector import ObjectDetector
 from .ImageProcessor import ImageProcessor
+from os import path
 #from Util import util
 
 # Load the models
-model_path_screen_finder = 'spectrum_analyzer_tool/models/Optimized_Resized_cl_1.onnx'
-model_path_grid_finder = 'spectrum_analyzer_tool/models/Grid_LowRes_1-4_224.onnx'
+model_path_screen_finder = path.abspath(path.join(path.dirname(__file__),'models/Optimized_Resized_cl_1.onnx'))
+model_path_grid_finder = path.abspath(path.join(path.dirname(__file__),'models/Grid_LowRes_1-4_224.onnx'))
 model_SpecScreen = YOLO(model_path_screen_finder, task='detect') #<---Model specifically for finding spectrum analyzer screen
 model_Grid = YOLO(model_path_grid_finder, task='detect')
 
@@ -19,7 +20,7 @@ processor = ImageProcessor()
 
 
 # Load the video
-video_path = 'assets/Sample_Video2.mp4'
+video_path = path.abspath(path.join(path.dirname(__file__),'assets/Sample_Video2.mp4'))
 video = cv2.VideoCapture(video_path)
 
 # Specify thresholds

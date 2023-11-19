@@ -12,6 +12,7 @@ from PyQt6 import uic
 from datetime import datetime
 
 import os
+from os import path
 import multiprocessing
 import csv
 from ultralytics import YOLO
@@ -32,7 +33,7 @@ min_power = 0.0
 
 
 # Load the models
-model_g_s = 'spectrum_analyzer_tool/models/192_200Epochs_AllVideos.onnx'
+model_g_s = path.abspath(path.join(path.dirname(__file__),'models/192_200Epochs_AllVideos.onnx'))
 model_Grid = YOLO(model_g_s, task='detect')
 detector_grid = ObjectDetector(model=model_Grid, imgz=192)
 
@@ -47,9 +48,9 @@ class Main(QMainWindow):
     max_power = None
     min_power = None
 
-    img_array1 = ["Capture 1,images\Capture1.jpg"]
-    img_array2 = ["Capture 2,images\Capture2.jpg"]
-    img_array3 = ["Capture 3,images\Capture3.jpg"]
+    img_array1 = ["Capture 1,"+str(path.abspath(path.join(path.dirname(__file__),"images/Capture1.jpg")))]
+    img_array2 = ["Capture 2,"+str(path.abspath(path.join(path.dirname(__file__),"images/Capture2.jpg")))]
+    img_array3 = ["Capture 3,"+str(path.abspath(path.join(path.dirname(__file__),"images/Capture3.jpg")))]
     image_array = [img_array1,img_array2,img_array3]
 
     image_index = 0
@@ -57,7 +58,7 @@ class Main(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        uic.loadUi("spectrum_analyzer_tool/pyqt.ui", self)
+        uic.loadUi(path.abspath(path.join(path.dirname(__file__),"pyqt.ui")), self)
 
         self.pushButton.clicked.connect(self.open_dialog)
 
@@ -437,7 +438,7 @@ class Main(QMainWindow):
 
 
         # Load the models
-        model_g_s = 'spectrum_analyzer_tool/models/192_200Epochs_AllVideos.onnx'
+        model_g_s = path.abspath(path.join(path.dirname(__file__),'models/192_200Epochs_AllVideos.onnx'))
         # model_g_s = 'CreateDataSet/runs/detect/train12/weights/best.onnx'
         model_Grid = YOLO(model_g_s, task='detect')
 
@@ -476,9 +477,10 @@ class Main(QMainWindow):
 
         name_time = datetime.now()
         output_filename = "Out_"+ str(name_time.month) +"_"+ str(name_time.day)+"_"+str(name_time.year) +"_"+ str(name_time.hour)+"_"+ str(name_time.minute)+ "_" + str(name_time.second) + ".csv"
+        output_path = path.abspath(path.join('..',output_filename))
 
         start_time = time.time()
-        with open(output_filename, 'w', newline='') as csvfile:
+        with open(output_path, 'w', newline='') as csvfile:
             fieldnames = ['Timestamp', 'Frequency (GHz)', 'Power (dBm)', 'Min Power (dBm)', 'Max Power (dBm)', 'Avg Power (dBm)']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 

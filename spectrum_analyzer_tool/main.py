@@ -12,6 +12,7 @@ import time
 from . import interface
 from decord import VideoReader
 from decord import cpu, gpu
+from os import path
 
 filePath=''
 center_frequency=1.0
@@ -31,8 +32,8 @@ min_power = 0.0
 def script_trained_ml_approach():
     print("Script_main adjusted called")
     # Load the models
-    model_g_s = 'spectrum_analyzer_tool/models/192_300Epochs_AllVideos.onnx'
-    # model_g_s = 'CreateDataSet/runs/detect/train12/weights/best.onnx'
+    model_g_s = path.abspath(path.join(path.dirname(__file__),'models/192_300Epochs_AllVideos.onnx'))
+    # model_g_s = path.abspath(path.join(path.dirname(__file__),'CreateDataSet/runs/detect/train12/weights/best.onnx'))
     model_Grid = YOLO(model_g_s, task='detect')
 
 
@@ -211,8 +212,8 @@ def get_cpu_info():
 def script_main():
     total_start = time.time()    
     # Load the models
-    model_path_screen_finder = 'spectrum_analyzer_tool/models/Optimized_Resized_cl_1.onnx'
-    model_path_grid_finder = 'spectrum_analyzer_tool/models/Grid_LowRes_1-4_224.onnx'
+    model_path_screen_finder = path.abspath(path.join(path.dirname(__file__),'models/Optimized_Resized_cl_1.onnx'))
+    model_path_grid_finder = path.abspath(path.join(path.dirname(__file__),'models/Grid_LowRes_1-4_224.onnx'))
     model_SpecScreen = YOLO(model_path_screen_finder, task='detect') # <---Model specifically for finding spectrum analyzer screen
     model_Grid = YOLO(model_path_grid_finder, task='detect')
 

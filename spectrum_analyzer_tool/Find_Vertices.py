@@ -2,9 +2,10 @@ import numpy as np
 import cv2
 import pandas as pd
 import matplotlib.pyplot as plt
+from os import path
 
-video = cv2.VideoCapture('assets/Sample_Video.mp4')
-real_capture = cv2.VideoCapture('assets/Sample_Video.mp4')
+video = cv2.VideoCapture(path.abspath(path.join(path.dirname(__file__),'assets/Sample_Video.mp4')))
+real_capture = cv2.VideoCapture(path.abspath(path.join(path.dirname(__file__),'assets/Sample_Video.mp4')))
 
 # Skip locating the screen for now
 y1 = 235 #y1

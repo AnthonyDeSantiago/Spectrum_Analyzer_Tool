@@ -1,6 +1,7 @@
 from .Util import*
+from os import path
 
-imgPath = 'Spectrum_Analyzer_Tool/assets/graph_sample.png'
+imgPath = path.abspath(path.join(path.dirname(__file__),'assets/graph_sample.png'))
 
 util.getOCR(imgPath)
 util.getReferenceLevel(imgPath)

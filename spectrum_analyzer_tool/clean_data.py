@@ -3,9 +3,10 @@ import cv2
 import csv
 import time
 import copy
+from os import path
 
 # CAN UPDATE THIS IN THE FUTURE TO CHOOSE WHERE ON USERS MACHINE THE OUTPUT GOES
-assetDirAdd = 'assets/' 
+assetDirAdd = path.abspath(path.join(path.dirname(__file__),'assets/'))
 
 ######################################################################
 # CLEAN DATA TO GET 

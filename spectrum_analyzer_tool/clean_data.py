@@ -16,16 +16,26 @@ assetDirAdd = path.abspath(path.join(path.dirname(__file__),'assets/'))
 class CleanData:
     def __init__(self, boxes, grid_width, grid_height, reference_level=0.0, center_frequency=1.0, span=100, IOC=-10.0):
         self.boxset = copy.deepcopy(boxes)
-        self.masterwidth = grid_width
-        self.masterheight = grid_height
+        self.grid_size_x = grid_width
+        self.grid_size_y = grid_height
         self.mastercenter_x = grid_width/2
         self.mastercenter_y = grid_height/2
         self.results = copy.deepcopy(boxes)
+        self.lb_freq = center_frequency - ((span / 1000)/2)
+        self.ub_freq = center_frequency + ((span / 1000)/2)
+
+        self.lb_power = -100
+        self.ub_power = 0
+
+        self.range_freq = self.ub_freq - self.lb_freq
+        self.range_power = self.ub_power - self.lb_power
 
         self.reference_level = reference_level
         self.center_frequency = center_frequency 
         self.span = span / 1000 # < -- convert MHz to GHz
         self.IOC = IOC
+        
+
         
     
     ### ISOLATE THE SIGNAL FROM THE SPECTRUM ANALYZER
@@ -34,30 +44,22 @@ class CleanData:
         start = time.time()
 
         for box in self.results:
-            if box[5] < self.masterwidth*0.10: del box
-            elif box[6] < self.masterheight*0.10: del box
-            elif box[5] > self.masterwidth*0.90 and box[6] > self.masterheight*0.90: del box
+            midpoint = box[3] - (box[3] - box[2]) // 2
+
+            if box[5] < self.grid_size_x*0.10: del box
+            elif box[6] < self.grid_size_y*0.10: del box
+            elif box[5] > self.grid_size_x*0.90 and box[6] > self.grid_size_y*0.90: del box
             else:            
-                if box[6] > self.masterheight * 0.09:
+                if box[6] > self.grid_size_y * 0.09:
                     #MAX POWER ---- STILL NEED TO DO SOMETHING TO HANDLE IF dB GO BELOW CENTER LINE
-                    max_power_percentage = (box[6]/self.masterheight) 
-                    #print("max_power_percentage >>> "+ str(max_power_percentage))
-                    max_power_height = 10 * self.IOC # <-- assuming grid = in blocks of 10
-                    #print("max_power_height >>> "+ str(-70.0 + (max_power_percentage * max_power_height)) + "dB")
-                    box.append(-70.0 - (max_power_percentage * max_power_height)) #<-- -70 is the bottom center line, conver to auto find later
+                    estimated_power = ((box[6]) / self.grid_size_y) * self.range_power + self.lb_power
+                    box.append(estimated_power) #<-- -70 is the bottom center line, conver to auto find later
                 else:
                     box.append(0)
 
-                if box[5] > self.masterwidth*0.70:
-                    #FREQUENCY --> ( { [(x2 - x1) / 2) - grid_center_x] / total width } * 1/2 span ) + user_input_center_frequency_value
-                    center_of_box_x = (box[3]-box[1])/2
-                    x_of_box_center_relative_to_grid_center = center_of_box_x - self.mastercenter_x
-                    percent_location_freq = x_of_box_center_relative_to_grid_center / self.masterwidth
-                    center_of_span = (self.span  + self.center_frequency)/2
-                    center_exists = percent_location_freq * center_of_span
-                    freq = 0
-                    if center_exists != 0: freq = self.center_frequency
-                    box.append(freq) 
+                if box[5] > self.grid_size_x*0.70:
+                    estimated_center_frequency = ((midpoint - box[1]) / self.grid_size_x) * self.range_freq + self.lb_freq
+                    box.append(estimated_center_frequency) 
                 else:
                     box.append(0)
         
@@ -119,7 +121,20 @@ class CleanData:
         print("\tPrinting results to CSV...")
         start = time.time()
 
-        header = ['timestamp', 'top left box coord', 'bottom right box coord', 'box width', 'box height', 'max power', 'frequency']
+        timestamp = "00"
+        tempboxes = []
+
+        for box in self.results:
+            if timestamp == box[0]:
+                if box[5] > 0 or box[6] > 0:
+                    tempboxes.append(box)
+            else:
+                tempboxes.append(box)
+            timestamp = box[0]
+
+
+
+        header = ['timestamp', 'frequency', 'max power']
 
         name_time = datetime.now()
         output_filename = "Unsupervised_Out_"+ str(name_time.month) +"_"+ str(name_time.day)+"_"+str(name_time.year) +"_"+ str(name_time.hour)+"_"+ str(name_time.minute)+ "_" + str(name_time.second) + ".csv"
@@ -128,8 +143,12 @@ class CleanData:
             writer = csv.writer(f)
             writer.writerow(header)
 
-            for box in self.results:
-                writer.writerow(box)
+            for box in tempboxes:
+                tempbox = []
+                tempbox.append(box[0])
+                tempbox.append(box[6])
+                tempbox.append(box[5])
+                writer.writerow(tempbox)
 
         end = time.time()
         print("\n\t>>> Printing results to CSV took " + str(end-start) + "s\n")

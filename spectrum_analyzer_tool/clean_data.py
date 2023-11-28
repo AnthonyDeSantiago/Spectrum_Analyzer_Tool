@@ -42,25 +42,63 @@ class CleanData:
     def get_results(self):
         print("\tCleaning data...")
         start = time.time()
+        
+        #print(self.results)
+        #self.boxes.append([(frame_count + 1)/self.consecutive_frames, x, y, x + w, y + h, w, h])
+        #                        0                                     1  2     3      4   5  6
+
+#        for box in self.results:
+#            if box[5] < self.grid_size_x*0.10: del box
+#            elif box[6] < self.grid_size_y*0.10: del box
+#            elif box[5] > self.grid_size_x*0.90 and box[6] > self.grid_size_y*0.90: del box
+#            else:            
+#                if box[6] > self.grid_size_y * 0.09:
+#                    estimated_power = ((box[2]) / self.grid_size_y) * self.range_power + self.lb_power
+#                    box.append(estimated_power) 
+#                else:
+#                    box.append(0)#
+#
+#                if box[5] > self.grid_size_x*0.70:
+#                    # midpoint = x2 - (x2 - x1) // 2
+#                    midpoint = box[3] - (box[3] - box[1]) // 2
+#                    estimated_center_frequency = ((midpoint) / self.grid_size_x) * self.range_freq + self.lb_freq
+#                    box.append(estimated_center_frequency) 
+#                else:
+#                    box.append(0)
+#            
+#                if (box[7] == 0) and (box[8] != 0): del box
 
         for box in self.results:
-            midpoint = box[3] - (box[3] - box[2]) // 2
+            
 
-            if box[5] < self.grid_size_x*0.10: del box
-            elif box[6] < self.grid_size_y*0.10: del box
-            elif box[5] > self.grid_size_x*0.90 and box[6] > self.grid_size_y*0.90: del box
+            #if box[5] < self.grid_size_x*0.05: 
+            #    del box
+            #    print("box[5] < self.grid_size_x*0.05")
+            if box[6] > self.grid_size_y*0.60: 
+                del box
+            elif box[6] < self.grid_size_y*0.035:
+                del box
+            elif box[2] < self.grid_size_y*0.03: 
+                del box
+            elif box[1] < self.grid_size_x*0.1: 
+                del box
+            #elif box[6] < self.grid_size_y*0.10: del box
+            #elif box[5] > self.grid_size_x*0.90 and box[6] > self.grid_size_y*0.90: del box
             else:            
-                if box[6] > self.grid_size_y * 0.09:
-                    #MAX POWER ---- STILL NEED TO DO SOMETHING TO HANDLE IF dB GO BELOW CENTER LINE
-                    estimated_power = ((box[6]) / self.grid_size_y) * self.range_power + self.lb_power
+                if (box[4] > (self.grid_size_y * 0.2)) and (box[3] > (self.grid_size_x*0.40)):
+                    #estimated_power =  (y1 / width of grid) * range_power + lb_power
+                    estimated_power = ((box[2]) / self.grid_size_y) * self.range_power + self.lb_power
                     box.append(estimated_power) #<-- -70 is the bottom center line, conver to auto find later
-                else:
-                    box.append(0)
+                #else:
+                #    box.append(0)
 
-                if box[5] > self.grid_size_x*0.70:
-                    estimated_center_frequency = ((midpoint - box[1]) / self.grid_size_x) * self.range_freq + self.lb_freq
+                #if (box[3] - (self.grid_size_x*0.50)) > 0:
+                    # midpoint = x2 - (x2 - x1) // 2
+                    midpoint = box[3] - (box[3] - box[1]) // 2
+                    estimated_center_frequency = ((midpoint) / self.grid_size_x) * self.range_freq + self.lb_freq
                     box.append(estimated_center_frequency) 
                 else:
+                    box.append(0)
                     box.append(0)
         
         for box in self.results:

@@ -14,6 +14,17 @@ To streamline and enhance this critical analysis, our project aimed to develop a
 - Automated extraction of signal amplitude and frequency.
 - Identification of a measured signal’s center frequency and peak amplitude.
 
+**Running the Application**
+
+First install any missing dependencies:
+```bash
+pip install -r requirements.txt
+```
+Run interface.py:
+```bash
+python interface.py
+```
+
 **Authors:**
 
 - Anthony De Santiago - Project Lead - [@AnthonyDeSantiago](https://github.com/AnthonyDeSantiago)

@@ -6,7 +6,7 @@ Military flight test ranges play a crucial role in the development and validatio
 
 **Project Objective:**
 
-To streamline and enhance this critical analysis, our project aimed to develop an automated solution for RF Spectrum Analysis. We employed a custom trained state-of-the-art YOLO V8 model to detect and isolate the Spectrum Analyzer screen in any arbitrary video footage regardless of the analyzer used. Furthermore, we utilized a novel combination of frame differencing, summing, and agglomerative clustering techniques to isolate and segment the signals measured on the spectrum analyzer screen. In this way, relevant properties of the measured signals could be extracted from the analyzed video. Finally, to maximize video processing speed, we used Python’s multiprocessing library to parallelize the processing of frame batches and to leverage all available processor cores.
+To streamline and enhance this critical analysis, our project aimed to develop an automated solution for RF Spectrum Analysis. We employed a custom trained state-of-the-art YOLO V8 model to detect and isolate the Spectrum Analyzer screen and measured signal in any arbitrary video footage regardless of the analyzer used. By comparing the position and dimensions of the grid and signal bounding boxes, accurate estimates of the measured signal's center frequency and amplitude are derived. These values are then written to an outputted csv file for later analysis.
 
 **Key Features:**
 
@@ -16,11 +16,11 @@ To streamline and enhance this critical analysis, our project aimed to develop a
 
 **Running the Application**
 
-First install any missing dependencies:
+First, clone the repository and install any missing dependencies:
 ```bash
 pip install -r requirements.txt
 ```
-Run interface.py:
+To run the application, run interface.py:
 ```bash
 python interface.py
 ```

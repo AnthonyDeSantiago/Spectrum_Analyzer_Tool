@@ -469,8 +469,8 @@ class Main(QMainWindow):
         lb_freq = center_frequency - ((span / 1000)/2)
         ub_freq = center_frequency + ((span / 1000)/2)
 
-        lb_power = 0
-        ub_power = 100
+        ub_power = self.min_power
+        lb_power = self.max_power
 
         incomming_powers = []
 
@@ -583,7 +583,7 @@ def get_signal_properties(frame_nmr, fps, x1, y1, x2, y2, s_x1, s_y1, s_x2, s_y2
 
     timestamp = frame_nmr / fps
     estimated_center_frequency = ((midpoint - x1) / grid_size_x) * range_freq + lb_freq
-    estimated_power = lb_power - ((s_y1 - y1) / grid_size_y) * range_power
+    estimated_power = lb_power + ((s_y1 - y1) / grid_size_y) * range_power
 
     return timestamp, estimated_center_frequency, estimated_power
 
